@@ -14,3 +14,23 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['middleware' => 'auth'], function(){
+	Route::resource('category','admin\CategoriesController');
+});
+
+Route::group(['middleware' => 'auth'], function(){
+	Route::resource('subcategory','admin\SubcategoryController');
+});
+
+Route::group(['middleware' => 'auth'], function(){
+	Route::resource('product','admin\ProductController');
+});
+
+Route::group(['middleware' => 'auth'], function(){
+	Route::resource('gallery','admin\GalleryController');
+});
