@@ -50,7 +50,7 @@ class ProductController extends Controller
             'title' => 'required',
             'image' => 'required|image',
             'description' => 'required',
-            'sale' => 'required',
+            // 'sale' => 'required',
             'qty' => 'required'
         ]);
 
@@ -73,7 +73,7 @@ class ProductController extends Controller
         $product->title = $request->title;
         $product->image = $featured_new_image_name;
         $product->description = $request->description;
-        $product->sale = $request->sale;
+        // $product->sale = $request->sale;
         $product->qty = $request->qty;
         $product->options = implode("|",$images);
 
