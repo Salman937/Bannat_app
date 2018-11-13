@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('title');
             $table->text('image');
             $table->text('description');
-            $table->boolean('sale');
+            $table->boolean('sale')->nullable();
             $table->integer('qty');
             $table->text('options');
             $table->timestamps();

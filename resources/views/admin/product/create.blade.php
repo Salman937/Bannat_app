@@ -47,12 +47,12 @@
                                 <textarea name="description" id="description" cols="10" rows="3" class="form-control"></textarea>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="col-sm-2 control-label">Sale <span class="text-danger">*</span></label>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" name="sale">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Qty <span class="text-danger">*</span></label>
                             <div class="col-sm-7">
