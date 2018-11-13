@@ -31,15 +31,20 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Product</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="{{route('product.index')}}">Product</a></li>
-                </ul>
+                <a href="{{route('product.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Product</span></a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Home Page Gallery</span><span class="fa arrow"></span></a>
+                <a href="{{route('gallery.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Gallery</span></a>
+            </li>
+            <li>
+                <a href="{{route('coupons.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Coupons</span></a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-table"></i> <span class="nav-label">User</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
-                    <li><a href="{{route('gallery.index')}}">Gallery</a></li>
+                    <li><a href="{{route('user.index')}}">Active User</a></li>
+                    <li><a href="{{route('user.deactive')}}">De-Active User</a></li>
+                    <li><a href="{{ route('register') }}">Register User</a></li>
                 </ul>
             </li>
             {{-- <li>

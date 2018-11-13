@@ -34,3 +34,13 @@ Route::group(['middleware' => 'auth'], function(){
 Route::group(['middleware' => 'auth'], function(){
 	Route::resource('gallery','admin\GalleryController');
 });
+
+Route::group(['middleware' => 'auth'], function(){
+	Route::resource('coupons','admin\CouponsController');
+});
+
+Route::group(['middleware' => 'auth'], function(){
+	Route::resource('user','admin\UsersController');
+});
+
+Route::get('/userdeactive', 'admin\UsersController@de_active_user')->name('user.deactive');
