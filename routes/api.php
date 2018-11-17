@@ -63,6 +63,12 @@ Route::group(['prefix' => 'product'], function () {
 
 		Route::post('Add-product-to-wish-LIst', 'Apis\ProductsController@add_product_to_wishList')
 			->name('Add-product-to-wish-LIst');
+
+		Route::get('get-product/{id}', 'Apis\ProductsController@get_product_details')
+			->name('get-product');
+
+		Route::get('view-all-reviews/{id}', 'Apis\ProductsController@view_all_reviews')
+			->name('view-all-reviews');
 	});
 
 });

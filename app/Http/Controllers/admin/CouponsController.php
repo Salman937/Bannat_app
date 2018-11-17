@@ -5,13 +5,14 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
-use App\Category;
+use App\Coupons;
+use App\Product;
 
-class SubcategoryController extends Controller
+class CouponsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware('seller');
     }
     /**
      * Display a listing of the resource.
@@ -20,11 +21,10 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $data['heading'] = 'Secound Category list';
-        $data['categories'] = Category::where('level',0)->get();
-        $data['subcategories'] = Category::where('level',1)->get();
+        $data['heading'] = 'Coupons list';
+        $data['coupons'] = Coupons::all();
 
-        return view('admin.subcategory.list')->with($data);
+        return view('admin.coupons.list')->with($data);
     }
 
     /**
@@ -34,10 +34,11 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        $data['heading'] = 'Add Secound Category';
-        $data['categories'] = Category::where('level',0)->get();
+        // dd(Product::all());
+        $data['heading'] = 'Add Coupons';
+        $data['product'] = Product::all();
 
-        return view('admin.subcategory.create')->with($data);
+        return view('admin.coupons.create')->with($data);
     }
 
     /**
@@ -49,22 +50,34 @@ class SubcategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'head_category' => 'required',
-            'category' => 'required',
+            // 'product_id' => 'required',
+            'product_check_box' => 'required',
+            'coupon_code' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'discount_type' => 'required',
+            'discount_value' => 'required'
         ]);
 
-        $category = new Category;
+        $coupons = new Coupons;
 
-        $category->category = $request->category;
-        $category->category_slug = str_slug($request->category, '-');
-        $category->level = 1;
-        $category->parent_id = $request->head_category;
+        $product_id=array();
+        foreach ($request->product_check_box as $key => $value) {
+            $product_id[] = $value;
+        }
+
+        $coupons->product_id = implode("|",$product_id);
+        $coupons->coupon_code = $request->coupon_code;
+        $coupons->start_date = date('Y-m-d', strtotime($request->start_date));
+        $coupons->end_date = date('Y-m-d', strtotime($request->end_date));
+        $coupons->discount_value = $request->discount_value;
+        $coupons->discount_type = $request->discount_type;
         
-        $category->save();
+        $coupons->save();
 
         Session::flash('success','Your data is save.');
         
-        return redirect()->route('subcategory.index');
+        return redirect()->route('coupons.index');
     }
 
     /**
@@ -109,10 +122,9 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
-        $cat = Category::find($id);
+        $cop = Coupons::find($id);
 
-        $cat->delete();
+        $cop->delete();
         Session::flash('success','Record is deleted seccussfully');
         return redirect()->back();
     }

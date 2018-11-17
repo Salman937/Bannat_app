@@ -6,9 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use App\Gallery;
+use App\Coupons;
 
 class GalleryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -103,6 +108,58 @@ class GalleryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $gal = Gallery::find($id);
+
+        $gal->delete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
+    }
+    public function admin_404_error()
+    {
+        return view('admin.404_error_blade');
+    }
+    public function coupons_list()
+    {
+        $data['heading'] = 'Coupons List';
+        $data['coupons'] = Coupons::where('product_id','admin_id')->get();
+        return view('admin.admin_coupons.list')->with($data);
+    }
+    public function coupons_create()
+    {
+        $data['heading'] = 'Create Coupons';
+        return view('admin.admin_coupons.create')->with($data);
+    }
+    public function coupons_store(Request $request)
+    {
+        $this->validate($request,[
+            'coupon_code' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'discount_type' => 'required',
+            'discount_value' => 'required'
+        ]);
+
+        $coupons = new Coupons;
+
+        $coupons->product_id = 'admin_id';
+        $coupons->coupon_code = $request->coupon_code;
+        $coupons->start_date = date('Y-m-d', strtotime($request->start_date));
+        $coupons->end_date = date('Y-m-d', strtotime($request->start_date));
+        $coupons->discount_value = $request->discount_value;
+        $coupons->discount_type = $request->discount_type;
+        
+        $coupons->save();
+
+        Session::flash('success','Your data is save.');
+        
+        return redirect()->route('admin.coupons.list');
+    }
+    public function coupons_destory($id)
+    {
+        $cop = Coupons::find($id);
+
+        $cop->delete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
     }
 }

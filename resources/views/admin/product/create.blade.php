@@ -13,13 +13,29 @@
                     <form action="{{ route('product.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Category <span class="text-danger">*</span></label>
+                            <label class="col-sm-2 control-label">First Category <span class="text-danger">*</span></label>
                             <div class="col-sm-7">
-                                <select name="category" id="category" class="form-control">
-                                    <option selected disabled >Select Category</option>
+                                <select name="head_category" id="head_category" required class="form-control head_category">
+                                    <option selected disabled >Select First Category</option>
                                     @foreach($categories as $cat)
                                         <option value="{{ $cat->id }}">{{ $cat->category }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Secound Category <span class="text-danger">*</span></label>
+                            <div class="col-sm-7">
+                                <select name="secound_cat" id="secound_cat" required class="form-control secound_cat">
+                                    <option selected disabled >Select Secound Category</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Third Category <span class="text-danger">*</span></label>
+                            <div class="col-sm-7">
+                                <select name="third_cat" id="third_cat" required class="form-control third_cat">
+                                    <option selected disabled >Select Third Category</option>
                                 </select>
                             </div>
                         </div>
@@ -47,12 +63,6 @@
                                 <textarea name="description" id="description" cols="10" rows="3" class="form-control"></textarea>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <label class="col-sm-2 control-label">Sale <span class="text-danger">*</span></label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" name="sale">
-                            </div>
-                        </div> -->
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Qty <span class="text-danger">*</span></label>
                             <div class="col-sm-7">
@@ -76,4 +86,66 @@
         </div>
     </div>
 </div> 
-@endsection\
+@endsection
+@section('scrpits')
+<script>
+$(document).ready(function(){
+    $('body').on('change','.head_category',function(){
+        var first_cat = $(this).val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            data:{id:first_cat},
+            type:'POST',
+            url:"/get_cat_seller",
+            success: function(return_data)
+            {
+                var data= jQuery.parseJSON(return_data);
+                if(!jQuery.isEmptyObject(data))
+                {
+                    $('.secound_cat')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .append('<option disabled selected>Select Secound Category</option>');
+                  $.each( data, function( index, value ){
+                   $('.secound_cat').append($('<option value="'+value['id']+'">'+value['category']+'</option>'));
+                  });
+                }
+            },
+        });
+    });
+    $('body').on('change','.secound_cat',function(){
+        var sec_cat = $(this).val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            data:{id:sec_cat},
+            type:'POST',
+            url:"/get_cat_seller",
+            success: function(return_data)
+            {
+                var data= jQuery.parseJSON(return_data);
+                if(!jQuery.isEmptyObject(data))
+                {
+                    $('.third_cat')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .append('<option disabled selected>Select Third Category</option>');
+                  $.each( data, function( index, value ){
+                   $('.third_cat').append($('<option value="'+value['id']+'">'+value['category']+'</option>'));
+                  });
+                }
+            },
+        });
+    });
+});
+</script>
+@endsection

@@ -9,6 +9,10 @@ use Session;
 
 class CategoriesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +20,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $data['heading']    = 'Category List';
-        $data['categories'] = Category::all();
+        $data['heading']    = 'First Category List';
+        $data['categories'] = Category::where('level',0)
+                                        ->get();
 
         return view('admin.headcategory.list')->with($data);
     }
@@ -42,14 +47,13 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'category' => 'required',
-            'category_slug' => 'required'
+            'category' => 'required'
         ]);
 
         $category = new Category;
 
         $category->category = $request->category;
-        $category->category_slug = str_slug($request->category_slug, '-');
+        $category->category_slug = str_slug($request->category, '-');
         $category->level = 0;
         $category->parent_id = 0;
         
@@ -102,6 +106,65 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cat = Category::find($id);
+        $sub_category = Category::where('parent_id',$id)->get();
+
+        if (!empty($sub_category)) {
+            foreach ($sub_category as $sub_key => $sub_value) {
+                $sub_category_sub = Category::where('parent_id',$sub_value->id)->first();
+                if (!empty($sub_category_sub)) {
+                    foreach ($sub_category_sub as $sub_key_sub => $sub_value_sub) {
+                        $sub_category_sub->forceDelete();
+                    }
+                    $sub_category->forceDelete();
+                }
+            }
+        }
+        $cat->forceDelete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
+    }
+
+    public function third_category_list()
+    {
+        $data['heading']    = 'Third Category List';
+        $data['third_category'] = Category::where('level',2)->get();
+        $data['categories'] = Category::where('level',0)->get();
+
+        return view('admin.thirdcategory.list')->with($data);
+    }
+    public function get_cat(Request $request)
+    {
+        $data = Category::where('parent_id',$request->id)->get();
+        print json_encode($data);
+    }
+    public function thirdcategory_store(Request $request)
+    {
+        $this->validate($request,[
+            'head_category' => 'required',
+            'secound_cat' => 'required',
+            'category' => 'required'
+        ]);
+
+        $category = new Category;
+
+        $category->category = $request->category;
+        $category->category_slug = str_slug($request->category, '-');
+        $category->level = 2;
+        $category->parent_id = $request->secound_cat;
+        
+        $category->save();
+
+        Session::flash('success','Your data is save.');
+        
+        return redirect()->route('third.category');
+    }
+    public function thirdcategory_destory($id)
+    {
+        $cat = Category::find($id);
+
+        $cat->delete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
     }
 }

@@ -5,9 +5,8 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
-use App\Category;
-
-class SubcategoryController extends Controller
+use App\User;
+class UsersController extends Controller
 {
     public function __construct()
     {
@@ -20,12 +19,16 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $data['heading'] = 'Secound Category list';
-        $data['categories'] = Category::where('level',0)->get();
-        $data['subcategories'] = Category::where('level',1)->get();
-
-        return view('admin.subcategory.list')->with($data);
+        $data['heading'] = 'Active User List';
+        $data['users']   = User::where('deactive_users',1)->get();
+        return view('admin.user.list')->with($data);
     }
+
+    // public function user_register()
+    // {
+    //     $data['heading'] = 'Add User';
+    //     return view('admin.user.create')->with($data);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -34,10 +37,7 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        $data['heading'] = 'Add Secound Category';
-        $data['categories'] = Category::where('level',0)->get();
-
-        return view('admin.subcategory.create')->with($data);
+        //
     }
 
     /**
@@ -48,23 +48,7 @@ class SubcategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'head_category' => 'required',
-            'category' => 'required',
-        ]);
-
-        $category = new Category;
-
-        $category->category = $request->category;
-        $category->category_slug = str_slug($request->category, '-');
-        $category->level = 1;
-        $category->parent_id = $request->head_category;
-        
-        $category->save();
-
-        Session::flash('success','Your data is save.');
-        
-        return redirect()->route('subcategory.index');
+        //
     }
 
     /**
@@ -109,11 +93,17 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
-        $cat = Category::find($id);
+        $user = User::find($id);
 
-        $cat->delete();
+        $user->delete();
         Session::flash('success','Record is deleted seccussfully');
         return redirect()->back();
+    }
+
+    public function de_active_user()
+    {
+        $data['heading'] = 'De-Active User List';
+        $data['users']   = User::where('deactive_users',0)->get();
+        return view('admin.user.de_active_list')->with($data);
     }
 }

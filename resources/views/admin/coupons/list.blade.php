@@ -8,7 +8,7 @@
                 <div class="ibox-title">
                     <h5>{{ $heading }}</h5>
                     <div class="ibox-tools">
-                        {{-- <a class="btn btn-xs btn-primary" href="{{ route('product.create') }}"><i class="fa fa-plus-circle"></i> Add Product</a> --}}
+                        <a class="btn btn-xs btn-primary" href="{{ route('coupons.create') }}"><i class="fa fa-plus-circle"></i> Add Coupns</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -16,30 +16,29 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                           <tr>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Title</th>
-                            <th>Featured</th>
-                            <th>Description</th>
-                            <th>Sale</th>
-                            <th>Quantity</th>
+                            <th>Product</th>
+                            <th>Coupon Code</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Discount Value</th>
+                            <th>Discount Type</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach($product as $pro)
-                              <tr class="gradeX">
-                                <td>{{$pro->products_categories_id}}</td>
-                                <td>{{$pro->price}}</td>
-                                <td>{{$pro->title}}</td>
-                                <td><img src="{{ $pro->image }}" alt="{{ $pro->image }}" width="70px" height="50px" style="border-radius:15px;"></td>
-                                <td>{{$pro->description}}</td>
-                                <td>{{$pro->sale}}</td>
-                                <td>{{$pro->qty}}</td>
+                            @foreach($coupons as $coup)
+                              <tr>
+                                <td>{{ $coup->product_id }}</td>
+                                <td>{{ $coup->coupon_code }}</td>
+                                <td>{{ date('d-m-Y', strtotime($coup->start_date)) }}</td>
+                                <td>{{ date('d-m-Y', strtotime($coup->end_date)) }}</td>
+                                <td>{{ $coup->discount_value }}</td>
+                                <td>{{ $coup->discount_type }}</td>
                                 <td>
-                                    <a href="{{ route('product.edit', [$pro->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+                                    <a href="{{ route('coupons.edit', [$coup->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 
-                                    <form action="{{ URL::route('product.destroy', [$pro->id]) }}" method="POST">
+                                    {{-- <a href="{{ route('coupons.destroy', [$coup->id]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a> --}}
+                                    <form action="{{ URL::route('coupons.destroy', [$coup->id]) }}" method="POST">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i></button>

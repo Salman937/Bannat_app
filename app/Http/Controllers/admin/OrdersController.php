@@ -4,14 +4,15 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Order;
 use Session;
-use App\Category;
+use Auth;
 
-class SubcategoryController extends Controller
+class OrdersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware('seller');
     }
     /**
      * Display a listing of the resource.
@@ -20,11 +21,10 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $data['heading'] = 'Secound Category list';
-        $data['categories'] = Category::where('level',0)->get();
-        $data['subcategories'] = Category::where('level',1)->get();
+        $data['heading']    = 'Orders List';
+        $data['order'] = Order::where('user_id',Auth::user()->id);
 
-        return view('admin.subcategory.list')->with($data);
+        return view('admin.order.list')->with($data);
     }
 
     /**
@@ -34,10 +34,7 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        $data['heading'] = 'Add Secound Category';
-        $data['categories'] = Category::where('level',0)->get();
-
-        return view('admin.subcategory.create')->with($data);
+        //
     }
 
     /**
@@ -48,23 +45,7 @@ class SubcategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'head_category' => 'required',
-            'category' => 'required',
-        ]);
-
-        $category = new Category;
-
-        $category->category = $request->category;
-        $category->category_slug = str_slug($request->category, '-');
-        $category->level = 1;
-        $category->parent_id = $request->head_category;
-        
-        $category->save();
-
-        Session::flash('success','Your data is save.');
-        
-        return redirect()->route('subcategory.index');
+        //
     }
 
     /**
@@ -109,11 +90,6 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
-        $cat = Category::find($id);
-
-        $cat->delete();
-        Session::flash('success','Record is deleted seccussfully');
-        return redirect()->back();
+        //
     }
 }

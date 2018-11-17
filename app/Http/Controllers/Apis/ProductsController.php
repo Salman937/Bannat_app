@@ -20,7 +20,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
-                'message' => 'This Category Have No Products',
+                'message' => 'Result',
             ]);
         } else {
             return response()->json([
@@ -53,7 +53,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
-                'message' => 'Low to High Result',
+                'message' => 'Result',
                 'data' => $low_to_high,
             ]);
 
@@ -80,7 +80,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
-                'message' => 'High to Low Result',
+                'message' => 'Result',
                 'data' => $hig_to_low,
             ]);
 
@@ -115,7 +115,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
-                'message' => 'Best Rating Products',
+                'message' => 'Result',
                 'data' => $bet_rating_products,
             ]);
 
@@ -142,7 +142,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
-                'message' => 'All Newly Added Products',
+                'message' => 'Result',
                 'data' => $newly_added_products,
             ]);
 
@@ -171,8 +171,62 @@ class ProductsController extends Controller
     /**
      * Get Product Details
      */
-    public function get_product_details()
+    public function get_product_details($id)
     {
+        $product_details = DB::table('products')->where('id', $id)->first();
+        $product_review_avg = DB::table('product_reviews')->where('product_id', $id)->avg('review');
+        $latest_review = DB::table('product_reviews')->where('product_id', $id)->orderBy('user_id', 'desc')->first();
+        $user_images = DB::table('users')
+            ->select('user_image')
+            ->join('product_reviews','product_reviews.user_id','=','users.id')
+            ->where('product_reviews.product_id', $id)
+            ->orderBy('user_id', 'desc')
+            ->get();
+
+        $images = array();
+        foreach($user_images as $key=>$img)
+        {
+            $images[] = $img->user_image;
+        }
+       
+        if (!empty($product_details)) {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'Product Detils',
+                'product_details' => $product_details,
+                'product_average_review' => round($product_review_avg),
+                'last_review' => $latest_review,
+                'review_user_images' => $images
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'Product Details Not Found',
+            ]);
+        }
+    }
+
+    public function view_all_reviews($id)
+    {
+        $product_reviews = DB::table('product_reviews')->where('product_id',$id)->get();
+
+        if (empty($product_reviews)) 
+        {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'Product reviews Not Not Found',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'Product Reviews',
+                'reviews' => $product_reviews,
+            ]);
+        }
         
     }
 }

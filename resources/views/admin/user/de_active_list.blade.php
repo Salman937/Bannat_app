@@ -8,7 +8,7 @@
                 <div class="ibox-title">
                     <h5>{{ $heading }}</h5>
                     <div class="ibox-tools">
-                        <a class="btn btn-xs btn-primary" href="{{ route('gallery.create') }}"><i class="fa fa-plus-circle"></i> Add Gallery Image</a>
+                        {{-- <a class="btn btn-xs btn-primary" href="{{ route('user.create') }}"><i class="fa fa-plus-circle"></i> Add Gallery Image</a> --}}
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -16,22 +16,26 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                           <tr>
-                            <th>Gallery</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Phone No</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach($gallery as $img)
+                            @foreach($users as $user)
                               <tr>
-                                <td><img src="{{asset('uploads/gallery/'.$img->images)}}" alt="{{ $img->images }}"  width="70px" height="50px" style="border-radius:15px;"></td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->type }}</td>
+                                <td>{{ $user->phone_no }}</td>
                                 <td>
-                                    <a href="{{ route('gallery.edit', [$img->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+                                    <a href="{{ route('user.edit', [$user->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 
-                                    <form action="{{ URL::route('gallery.destroy', [$img->id]) }}" method="POST">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i></button>
-                                    </form>
+                                    <a href="{{ route('user.destroy', [$user->id]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a>
+                                    
+                                    <a href="{{ route('admin.coupons.destroy',['id' => $coup->id ]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i> </a>
                                 </td>
                               </tr>
                             @endforeach
@@ -52,7 +56,6 @@
 
 @section('scrpits')
     <!-- data table -->
-    <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function(){

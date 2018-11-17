@@ -8,7 +8,7 @@
                 <div class="ibox-title">
                     <h5>{{ $heading }}</h5>
                     <div class="ibox-tools">
-                        <a class="btn btn-xs btn-primary" href="{{ route('category.create') }}"><i class="fa fa-plus-circle"></i> Add Category</a>
+                        <a data-toggle="modal" class="btn btn-primary btn-xs" href="#modal-form"> Add First Category</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -27,9 +27,13 @@
                                 <td>{{$cat->category}}</td>
                                 <td>{{$cat->category_slug}}</td>
                                 <td>
-                                    <a href="{{ route('category.edit', [$cat->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+                                    <a href="{{ route('category.edit', [$cat->id]) }}" class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i> </a>
 
-                                    <a href="{{ route('category.destroy', [$cat->id]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a>
+                                    <form action="{{ URL::route('category.destroy', [$cat->id]) }}" method="POST">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i></button>
+                                    </form>
                                 </td>
                               </tr>
                             @endforeach
@@ -41,6 +45,31 @@
         </div>
     </div>
 </div> 
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">Add First Category (Head Category)</h3>
+                        <p>&nbsp;</p>
+                        <form action="{{ route('category.store') }}" method="post" class="form-horizontal">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <label>Category <span class="text-danger">*</span></label> 
+                                <input type="text" placeholder="Enter Category Name" required name="category" class="form-control">
+                            </div>
+                            <p>&nbsp;</p>
+                            <div>
+                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Save</strong></button>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('styles')
@@ -50,7 +79,6 @@
 
 @section('scrpits')
     <!-- data table -->
-    <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function(){

@@ -10,6 +10,10 @@ use App\Category;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('seller');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +35,7 @@ class ProductController extends Controller
     public function create()
     {
         $data['heading'] = 'Add Product';
-        $data['categories'] = Category::where('level',2)->get();
+        $data['categories'] = Category::where('level',0)->get();
 
         return view('admin.product.create')->with($data);
     }
@@ -45,7 +49,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'category' => 'required',
+            'third_cat' => 'required',
             'price' => 'required',
             'title' => 'required',
             'image' => 'required|image',
@@ -65,13 +69,13 @@ class ProductController extends Controller
             foreach($files as $file){
                 $name= time().$file->getClientOriginalName();
                 $file->move('uploads/product',$name);
-                $images[]=$name;
+                $images[]=asset('uploads/product/'.$name);
             }
         }
-        $product->products_categories_id = $request->category;
+        $product->products_categories_id = $request->third_cat;
         $product->price = $request->price;
         $product->title = $request->title;
-        $product->image = $featured_new_image_name;
+        $product->image = asset('uploads/product/'.$featured_new_image_name);
         $product->description = $request->description;
         // $product->sale = $request->sale;
         $product->qty = $request->qty;
@@ -126,6 +130,20 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pro = Product::find($id);
+
+        $pro->delete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
+    }
+    public function seller_404_error()
+    {
+        return view('404_error');
+    }
+    
+    public function get_cat(Request $request)
+    {
+        $data = Category::where('parent_id',$request->id)->get();
+        print json_encode($data);
     }
 }
