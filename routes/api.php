@@ -20,9 +20,9 @@ Route::group(['prefix' => 'user'], function () {
 		'as' => 'login'
 	]);
 
-	Route::post('register', [
+	Route::post('register-user', [
 		'uses' => 'Apis\UsersControllers@register',
-		'as' => 'register'
+		'as' => 'register-user'
 	]);
 
 	Route::post('forgot-password', [
