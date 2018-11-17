@@ -45,8 +45,30 @@ Route::group(['prefix' => 'user'], function () {
 Route::group(['prefix' => 'product'], function () {
 
 	Route::group(['middleware' => ['auth:api']], function () {
+		Route::resource('home', 'Apis\HomeController');
+		Route::resource('categories', 'Apis\CategoriesController');
 		Route::resource('products', 'Apis\ProductsController');
-		Route::get('categories', 'Apis\ProductsController@categories')->name('categories');
+
+		Route::get('low-to-high-products/{id}', 'Apis\ProductsController@low_to_high_products')
+			->name('low-to-high-products');
+
+		Route::get('high-to-low-products/{id}', 'Apis\ProductsController@high_to_low_products')
+			->name('high-to-low-products');
+
+		Route::get('best-rating-products/{id}', 'Apis\ProductsController@best_rating_products')
+			->name('best-rating-products');
+
+		Route::get('newly-added-products/{id}', 'Apis\ProductsController@newly_added_products')
+			->name('newly-added-products');
+
+		Route::post('Add-product-to-wish-LIst', 'Apis\ProductsController@add_product_to_wishList')
+			->name('Add-product-to-wish-LIst');
+
+		Route::get('get-product/{id}', 'Apis\ProductsController@get_product_details')
+			->name('get-product');
+
+		Route::get('view-all-reviews/{id}', 'Apis\ProductsController@view_all_reviews')
+			->name('view-all-reviews');
 	});
 
 });
