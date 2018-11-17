@@ -77,7 +77,7 @@ class ProductController extends Controller
         $product->title = $request->title;
         $product->image = asset('uploads/product/'.$featured_new_image_name);
         $product->description = $request->description;
-        // $product->sale = $request->sale;
+        $product->user_id = Auth::user()->id;
         $product->qty = $request->qty;
         $product->options = implode("|",$images);
 

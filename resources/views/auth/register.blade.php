@@ -6,7 +6,7 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>{{ $heading }}</h5>
+                    <h5>Add New User</h5>
                     {{-- @include('include.error') --}}
                 </div>
                 <div class="ibox-content"> 
