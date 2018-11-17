@@ -9,68 +9,170 @@ use Validator;
 
 class ProductsController extends Controller
 {
-    public function index()
+    /**
+     * Get category products
+     */
+    public function show($id)
     {
-        $gallery_images = DB::table('home_page_gallery')->orderBy('id', 'desc')->limit(3)->get();
+        $products = DB::table('products')->where('products_categories_id', $id)->get();
 
-        $sale_images = DB::table('products')->where('sale', 1)->orderBy('id', 'desc')->limit(12)->get();
+        if ($products->isEmpty()) {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'This Category Have No Products',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'All Products',
+                'data' => $products,
+            ]);
 
-        $trending_deals = DB::table('order_items')
-            ->select([
-                'order_items.product_id',
-                DB::raw('count(*) as total'),
-                'products.*'
-            ])
-            ->join('products', 'products.id', '=', 'order_items.product_id')
-            ->groupBy('order_items.product_id')
-            ->orderBy('total', 'DESC')
-            ->limit(12)
-            ->get();
-
-        $new_added = DB::table('products')->orderBy('id', 'desc')->limit(12)->get();
-
-        $recent_products = array();
-
-        foreach ($new_added as $recently) {
-            if (date("d-m-Y", strtotime($recently->created_at)) == date('d-m-Y')) {
-                $arr = array(
-                    "id" => $recently->id,
-                    "products_categories_id" => $recently->products_categories_id,
-                    "price" => $recently->price,
-                    "title" => $recently->title,
-                    "image" => $recently->image,
-                    "description" => $recently->description,
-                    "sale" => $recently->sale,
-                    "qty" => $recently->qty,
-                    "options" => $recently->options,
-                    "created_at" => $recently->created_at,
-                    "updated_at" => $recently->updated_at
-                );
-
-                array_push($recent_products, $arr);
-            }
         }
+    }
+
+    /**
+     * get products form low to higih price
+     */
+    public function low_to_high_products($id)
+    {
+        $low_to_high = DB::table('products')
+            ->where([
+                ['products_categories_id', $id]
+            ])->orderBy('price', 'asc')->get();
+
+        if (empty($low_to_high)) {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'No Data Available',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'Low to High Result',
+                'data' => $low_to_high,
+            ]);
+
+        }
+    }
+
+    /**
+     * get data from high to low price products
+     */
+    public function high_to_low_products($id)
+    {
+        $hig_to_low = DB::table('products')
+            ->where([
+                ['products_categories_id', $id]
+            ])->orderBy('price', 'desc')->get();
+
+        if (empty($hig_to_low)) {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'No Data Available',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'High to Low Result',
+                'data' => $hig_to_low,
+            ]);
+
+        }
+    }
+
+    /**
+     * Get best rating products in category
+     */
+    public function best_rating_products($id)
+    {
+        $bet_rating_products = DB::table('products')
+            ->select([
+                'products.description as prodcuts_description',
+                'product_reviews.description as review_description',
+                'products.*',
+                'product_reviews.*'
+            ])
+            ->join('product_reviews', 'product_reviews.product_id', '=', 'products.id')
+            ->where([
+                ['products.products_categories_id', $id],
+                ['product_reviews.review', 5],
+            ])->get();
+
+        if (empty($bet_rating_products)) {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'Best Products Not Available',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'Best Rating Products',
+                'data' => $bet_rating_products,
+            ]);
+
+        }
+    }
+
+    /**
+     * newly added products in category
+     */
+    public function newly_added_products($id)
+    {
+        $newly_added_products = DB::table('products')
+            ->where([
+                ['products.products_categories_id', $id]
+            ])->orderBy('created_at', 'desc')->get();
+
+        if (empty($newly_added_products)) {
+            return response()->json([
+                'success' => 'false',
+                'status' => '401',
+                'message' => 'Newly Added Products Not Available',
+            ]);
+        } else {
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'All Newly Added Products',
+                'data' => $newly_added_products,
+            ]);
+
+        }
+    }
+
+    /**
+     * Add product to wish list
+     */
+    public function add_product_to_wishList(Request $request)
+    {
+        $product = DB::table('favourite_products')->insert([
+            'user_id' => $request->user_id,
+            'product_id' => $request->product_id,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
 
         return response()->json([
             'success' => 'true',
             'status' => '200',
-            'message' => 'Home Page Data',
-            'gallery_images' => $gallery_images,
-            'flash_deal_images' => $sale_images,
-            'trending_deals' => $trending_deals,
-            'newly_products' => $recent_products,
+            'message' => 'Product Added to Wish LIst',
         ]);
     }
 
-    public function categories()
+    /**
+     * Get Product Details
+     */
+    public function get_product_details()
     {
-        $categories = DB::table('categories')->get();
-
-        return response()->json([
-            'success' => 'true',
-            'status' => '200',
-            'message' => 'All Categories',
-            'Categories' => $categories,
-        ]);
+        
     }
 }

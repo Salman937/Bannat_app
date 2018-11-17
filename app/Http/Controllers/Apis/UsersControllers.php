@@ -202,7 +202,6 @@ class UsersControllers extends Controller
     public function update_forgot_pass(Request $request)
     {
         $validator = Validator::make($request->all(), [
-
             'password' => 'required',
 
         ]);
