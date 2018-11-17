@@ -8,8 +8,7 @@
                 <div class="ibox-title">
                     <h5>{{ $heading }}</h5>
                     <div class="ibox-tools">
-                        {{-- <a class="btn btn-xs btn-primary" href="{{ route('subcategory.create') }}"><i class="fa fa-plus-circle"></i> Add SubCategory</a> --}}
-                        <a data-toggle="modal" class="btn btn-primary btn-xs" href="#modal-form"> Add Secound Category</a>
+                        <a data-toggle="modal" class="btn btn-primary btn-xs" href="#modal-form"> Add Third Category</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -23,18 +22,14 @@
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach($subcategories as $cat)
+                            @foreach($third_category as $cat)
                               <tr class="gradeX">
                                 <td>{{$cat->category}}</td>
                                 <td>{{$cat->category_slug}}</td>
                                 <td>
                                     <a href="{{ route('subcategory.edit', [$cat->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 
-                                    <form action="{{ URL::route('subcategory.destroy', [$cat->id]) }}" method="POST">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i></button>
-                                    </form>
+                                    <a href="{{ route('thirdcat.destroy', ['id' => $cat->id ]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a>
                                 </td>
                               </tr>
                             @endforeach
@@ -52,17 +47,23 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3 class="m-t-none m-b">Add Secound Category (Sub Category)</h3>
+                        <h3 class="m-t-none m-b">Add Third Category (Sub Category Sub)</h3>
                         <p>&nbsp;</p>
-                        <form action="{{ route('subcategory.store') }}" method="post" class="form-horizontal">
+                        <form action="{{ route('third_category.store') }}" method="post" class="form-horizontal">
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label>First Category <span class="text-danger">*</span></label>
-                                <select name="head_category" id="head_category" required class="form-control">
+                                <select name="head_category" id="head_category" required class="form-control head_category">
                                     <option selected disabled >Select First Category</option>
                                     @foreach($categories as $cat)
                                         <option value="{{ $cat->id }}">{{ $cat->category }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Secound Category <span class="text-danger">*</span></label>
+                                <select name="secound_cat" id="secound_cat" required class="form-control secound_cat">
+                                    <option selected disabled >Select Secound Category</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -100,4 +101,36 @@
             });
         });
     </script>
+<script>
+$(document).ready(function(){
+    $('body').on('change','.head_category',function(){
+        var first_cat = $(this).val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+        data:{id:first_cat},
+        type:'POST',
+        url:"/get_cat",
+        success: function(return_data)
+        {
+            var data= jQuery.parseJSON(return_data);
+            if(!jQuery.isEmptyObject(data))
+            {
+                $('.secound_cat')
+                .find('option')
+                .remove()
+                .end()
+                .append('<option disabled selected>Select Secound Category</option>');
+              $.each( data, function( index, value ){
+               $('.secound_cat').append($('<option value="'+value['id']+'">'+value['category']+'</option>'));
+              });
+            }
+        },
+    });
+});
+});
+</script>
 @endsection

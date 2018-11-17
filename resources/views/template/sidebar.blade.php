@@ -23,55 +23,61 @@
             <li>
                 <a href="{{route('home')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a>
             </li>
-            <li>
-                <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Categories</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="{{route('category.index')}}">Head Category</a></li>
-                    <li><a href="{{route('subcategory.index')}}">Sub Category</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="{{route('product.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Product</span></a>
-            </li>
-            <li>
-                <a href="{{route('gallery.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Gallery</span></a>
-            </li>
-            <li>
-                <a href="{{route('coupons.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Coupons</span></a>
-            </li>
-            <li>
-                <a href="#"><i class="fa fa-table"></i> <span class="nav-label">User</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li><a href="{{route('user.index')}}">Active User</a></li>
-                    <li><a href="{{route('user.deactive')}}">De-Active User</a></li>
-                    <li><a href="{{ route('register') }}">Register User</a></li>
-                </ul>
-            </li>
-            {{-- <li>
-                <a href="#"><i class="fa fa-sitemap"></i> <span class="nav-label">Menu Levels </span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse">
-                    <li>
-                        <a href="#">Third Level <span class="fa arrow"></span></a>
-                        <ul class="nav nav-third-level">
-                            <li>
-                                <a href="#">Third Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Third Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Third Level Item</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                    <li><a href="#">Second Level Item</a></li>
-                    <li>
-                        <a href="#">Second Level Item</a></li>
-                    <li>
-                        <a href="#">Second Level Item</a></li>
-                </ul>
-            </li> --}}
+            @if(Auth::user()->type=='admin')
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Categories</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{route('category.index')}}">First Category</a></li>
+                        <li><a href="{{route('subcategory.index')}}">Secound Category</a></li>
+                        <li><a href="{{route('third.category')}}">Third Category</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Coupons</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ route('admin.coupons.create') }}">Add Coupons</a></li>
+                        <li><a href="{{ route('admin.coupons.list') }}">Coupons List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Setting</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="#">Shipping List / Prices</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{route('gallery.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Gallery</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">User</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{route('user.index')}}">Active User</a></li>
+                        <li><a href="{{route('user.deactive')}}">De-Active User</a></li>
+                        <li><a href="{{ route('register') }}">Register User</a></li>
+                    </ul>
+                </li>
+            @endif
+            @if(Auth::user()->type=='seller')
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Product</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{route('product.create')}}">Add Product</a></li>
+                        <li><a href="{{route('product.index')}}">Product List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{route('order.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Orders List</span></a>
+                </li>
+                <li>
+                    <a href="{{route('coupons.index')}}"><i class="fa fa-th-large"></i> <span class="nav-label">Coupons</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Reports</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="#">Sales Report</a></li>
+                    </ul>
+                </li>
+            @endif
         </ul>
 
     </div>

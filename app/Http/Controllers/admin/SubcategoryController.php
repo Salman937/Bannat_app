@@ -9,6 +9,10 @@ use App\Category;
 
 class SubcategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +20,8 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $data['heading'] = 'Sub Category list';
+        $data['heading'] = 'Secound Category list';
+        $data['categories'] = Category::where('level',0)->get();
         $data['subcategories'] = Category::where('level',1)->get();
 
         return view('admin.subcategory.list')->with($data);
@@ -29,7 +34,7 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        $data['heading'] = 'Add Sub Category';
+        $data['heading'] = 'Add Secound Category';
         $data['categories'] = Category::where('level',0)->get();
 
         return view('admin.subcategory.create')->with($data);
@@ -46,13 +51,12 @@ class SubcategoryController extends Controller
         $this->validate($request,[
             'head_category' => 'required',
             'category' => 'required',
-            'category_slug' => 'required'
         ]);
 
         $category = new Category;
 
         $category->category = $request->category;
-        $category->category_slug = str_slug($request->category_slug, '-');
+        $category->category_slug = str_slug($request->category, '-');
         $category->level = 1;
         $category->parent_id = $request->head_category;
         
@@ -105,6 +109,11 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        dd($id);
+        $cat = Category::find($id);
+
+        $cat->delete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
     }
 }

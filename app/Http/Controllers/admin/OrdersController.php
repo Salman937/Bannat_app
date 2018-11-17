@@ -4,13 +4,15 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Order;
 use Session;
-use App\User;
-class UsersController extends Controller
+use Auth;
+
+class OrdersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware('seller');
     }
     /**
      * Display a listing of the resource.
@@ -19,16 +21,11 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $data['heading'] = 'Active User List';
-        $data['users']   = User::where('deactive_users',1)->get();
-        return view('admin.user.list')->with($data);
-    }
+        $data['heading']    = 'Orders List';
+        $data['order'] = Order::where('user_id',Auth::user()->id);
 
-    // public function user_register()
-    // {
-    //     $data['heading'] = 'Add User';
-    //     return view('admin.user.create')->with($data);
-    // }
+        return view('admin.order.list')->with($data);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -93,17 +90,6 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
-
-        $user->delete();
-        Session::flash('success','Record is deleted seccussfully');
-        return redirect()->back();
-    }
-
-    public function de_active_user()
-    {
-        $data['heading'] = 'De-Active User List';
-        $data['users']   = User::where('deactive_users',0)->get();
-        return view('admin.user.de_active_list')->with($data);
+        //
     }
 }

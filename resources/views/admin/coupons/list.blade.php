@@ -30,14 +30,19 @@
                               <tr>
                                 <td>{{ $coup->product_id }}</td>
                                 <td>{{ $coup->coupon_code }}</td>
-                                <td>{{ $coup->start_date }}</td>
-                                <td>{{ $coup->end_date }}</td>
+                                <td>{{ date('d-m-Y', strtotime($coup->start_date)) }}</td>
+                                <td>{{ date('d-m-Y', strtotime($coup->end_date)) }}</td>
                                 <td>{{ $coup->discount_value }}</td>
                                 <td>{{ $coup->discount_type }}</td>
                                 <td>
                                     <a href="{{ route('coupons.edit', [$coup->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 
-                                    <a href="{{ route('coupons.destroy', [$coup->id]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a>
+                                    {{-- <a href="{{ route('coupons.destroy', [$coup->id]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a> --}}
+                                    <form action="{{ URL::route('coupons.destroy', [$coup->id]) }}" method="POST">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i></button>
+                                    </form>
                                 </td>
                               </tr>
                             @endforeach

@@ -77,6 +77,24 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+                            <label for="type" class="col-md-2 control-label">User Type<span class="text-danger">*</span></label>
+
+                            <div class="col-md-7">
+                                <select name="type" id="type" class="form-control" required autofocus>
+                                    <option selected disabled class="form-control">Select User Type</option>
+                                    <option value="admin" class="form-control">Admin</option>
+                                    <option value="seller" class="form-control">Seller</option>
+                                </select>
+
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-7 col-md-offset-2">
                                 <button type="submit" class="btn btn-primary">

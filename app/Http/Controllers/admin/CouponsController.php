@@ -10,6 +10,10 @@ use App\Product;
 
 class CouponsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('seller');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -64,8 +68,8 @@ class CouponsController extends Controller
 
         $coupons->product_id = implode("|",$product_id);
         $coupons->coupon_code = $request->coupon_code;
-        $coupons->start_date = "2018-10-11";
-        $coupons->end_date = "2018-10-11";
+        $coupons->start_date = date('Y-m-d', strtotime($request->start_date));
+        $coupons->end_date = date('Y-m-d', strtotime($request->end_date));
         $coupons->discount_value = $request->discount_value;
         $coupons->discount_type = $request->discount_type;
         
@@ -118,6 +122,10 @@ class CouponsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cop = Coupons::find($id);
+
+        $cop->delete();
+        Session::flash('success','Record is deleted seccussfully');
+        return redirect()->back();
     }
 }
