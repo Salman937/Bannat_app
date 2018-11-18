@@ -109,7 +109,6 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
         $cat = Category::find($id);
 
         $cat->delete();

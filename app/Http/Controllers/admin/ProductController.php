@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use Session;
 use App\Category;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -48,38 +49,47 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->color);
         $this->validate($request,[
             'third_cat' => 'required',
             'price' => 'required',
             'title' => 'required',
-            'image' => 'required|image',
+            'images' => 'required',
+            'size' => 'required',
+            'color' => 'required',
             'description' => 'required',
             // 'sale' => 'required',
             'qty' => 'required'
         ]);
 
         $product = new Product;
-        
-        $featured = $request->image;
-        $featured_new_image_name = time().$featured->getClientOriginalName();
-        $featured->move('uploads/product',$featured_new_image_name);
 
          $images=array();
-        if($files=$request->file('option_images')){
-            foreach($files as $file){
+        if($image_files=$request->file('images')){
+            foreach($image_files as $file){
                 $name= time().$file->getClientOriginalName();
                 $file->move('uploads/product',$name);
                 $images[]=asset('uploads/product/'.$name);
             }
         }
+         $featured_images=array();
+        if($files=$request->file('option_images')){
+            foreach($files as $file){
+                $name= time().$file->getClientOriginalName();
+                $file->move('uploads/product',$name);
+                $featured_images[]=asset('uploads/product/'.$name);
+            }
+        }
         $product->products_categories_id = $request->third_cat;
         $product->price = $request->price;
         $product->title = $request->title;
-        $product->image = asset('uploads/product/'.$featured_new_image_name);
+        $product->size = implode("|",$request->size);
+        $product->color = implode("|",$request->color);
+        $product->image = implode("|",$images);
         $product->description = $request->description;
         $product->user_id = Auth::user()->id;
         $product->qty = $request->qty;
-        $product->options = implode("|",$images);
+        $product->options = implode("|",$featured_images);
 
         $product->save();
 

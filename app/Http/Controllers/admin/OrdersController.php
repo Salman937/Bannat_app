@@ -22,7 +22,7 @@ class OrdersController extends Controller
     public function index()
     {
         $data['heading']    = 'Orders List';
-        $data['order'] = Order::where('user_id',Auth::user()->id);
+        $data['order'] = Order::where('user_id',Auth::user()->id)->get();
 
         return view('admin.order.list')->with($data);
     }
@@ -91,5 +91,41 @@ class OrdersController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function order_status_update(Request $request)
+    {
+        $order = Order::find($request->order_id);
+
+        $order->order_status = $request->status;
+        if ($order->save()) {
+            print json_encode(1);
+        }
+        else{
+            print json_encode(0);
+        }
+    }
+    public function order_status_reject(Request $request)
+    {
+        $order = Order::find($request->order_id);
+
+        $order->accpect_reject = 0;
+        if ($order->save()) {
+            print json_encode(1);
+        }
+        else{
+            print json_encode(0);
+        }
+    }
+    public function order_status_accpect(Request $request)
+    {
+        $order = Order::find($request->order_id);
+
+        $order->accpect_reject = 1;
+        if ($order->save()) {
+            print json_encode(1);
+        }
+        else{
+            print json_encode(0);
+        }
     }
 }

@@ -92,6 +92,18 @@ Route::group(['middleware' => 'auth'],function(){
 		'uses'	=> 'admin\CategoriesController@thirdcategory_destory',
 		'as'	=> 'thirdcat.destroy'
 	]);
+	Route::post('/order_status_update',[
+		'uses' 	=> 'admin\OrdersController@order_status_update',
+		'as'	=> 'order.status.update'
+	]);
+	Route::post('/order_status_reject',[
+		'uses' 	=> 'admin\OrdersController@order_status_reject',
+		'as'	=> 'order.status.reject'
+	]);
+	Route::post('/order_status_accpect',[
+		'uses' 	=> 'admin\OrdersController@order_status_accpect',
+		'as'	=> 'order.status.accpect'
+	]);
 
 });
 

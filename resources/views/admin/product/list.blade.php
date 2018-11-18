@@ -19,10 +19,11 @@
                             <th>Category</th>
                             <th>Price</th>
                             <th>Title</th>
+                            <th>Quantity</th>
+                            <th>Size</th>
+                            <th>Color</th>
                             <th>Featured</th>
                             <th>Description</th>
-                            <th>Sale</th>
-                            <th>Quantity</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -32,10 +33,21 @@
                                 <td>{{$pro->products_categories_id}}</td>
                                 <td>{{$pro->price}}</td>
                                 <td>{{$pro->title}}</td>
-                                <td><img src="{{ $pro->image }}" alt="{{ $pro->image }}" width="70px" height="50px" style="border-radius:15px;"></td>
-                                <td>{{$pro->description}}</td>
-                                <td>{{$pro->sale}}</td>
                                 <td>{{$pro->qty}}</td>
+                                <td>{{$pro->size}}</td>
+                                <td>
+                                    @if(!empty($pro->color))
+                                        <?php $color = explode("|",$pro->color) ?>
+                                        @foreach($color as $col)
+                                            <input type="color" name="color[]" value="{{ $col }}" disabled>
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td>
+                                    <?php $image = explode("|",$pro->image) ?>
+                                    <img src="{{ $image[0] }}" alt="{{ $image[0] }}" width="70px" height="50px" style="border-radius:15px;">
+                                </td>
+                                <td>{{$pro->description}}</td>
                                 <td>
                                     <a href="{{ route('product.edit', [$pro->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 

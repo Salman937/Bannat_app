@@ -25,7 +25,7 @@
                     </div>
                     <div class="ibox-content">
                         <h1 class="no-margins">275,800</h1>
-                        <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+                        <div class="stat-percent font-bold text-info">&nbsp; <i class="fa fa-level-up"></i></div>
                         <small>New orders</small>
                     </div>
                 </div>
@@ -84,21 +84,104 @@
                     </div>
                     <div class="ibox-content">
                         <h1 class="no-margins">275,800</h1>
-                        <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+                        <div class="stat-percent font-bold text-info">&nbsp; <i class="fa fa-level-up"></i></div>
                         <small>New orders</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right"></span>
+                        <h5>On-Hold Orders</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">2</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
                     </div>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-primary pull-right">Today</span>
-                        <h5>visits</h5>
+                        <span class="label label-success pull-right"></span>
+                        <h5>Accpected Orders</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">106,120</h1>
-                        <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
-                        <small>New visits</small>
+                        <h1 class="no-margins">4</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right"></span>
+                        <h5>Shipped Orders</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">5</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right"></span>
+                        <h5>Rejected Orders</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">9</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right"></span>
+                        <h5>Top Product</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">19</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right"></span>
+                        <h5>Low Stock Orders</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">12</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right"></span>
+                        <h5>Out Of Stock Orders</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">21</h1>
+                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                        {{-- <small>Total income</small> --}}
                     </div>
                 </div>
             </div>
