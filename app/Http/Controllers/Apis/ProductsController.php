@@ -26,7 +26,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
-                'message' => 'All Products',
+                'message' => 'Result',
                 'data' => $products,
             ]);
 
@@ -43,7 +43,7 @@ class ProductsController extends Controller
                 ['products_categories_id', $id]
             ])->orderBy('price', 'asc')->get();
 
-        if (empty($low_to_high)) {
+        if ($low_to_high->isEmpty()) {
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
@@ -70,7 +70,7 @@ class ProductsController extends Controller
                 ['products_categories_id', $id]
             ])->orderBy('price', 'desc')->get();
 
-        if (empty($hig_to_low)) {
+        if ($hig_to_low->isEmpty()) {
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
@@ -105,7 +105,7 @@ class ProductsController extends Controller
                 ['product_reviews.review', 5],
             ])->get();
 
-        if (empty($bet_rating_products)) {
+        if ($bet_rating_products->isEmpty()) {
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
@@ -132,7 +132,7 @@ class ProductsController extends Controller
                 ['products.products_categories_id', $id]
             ])->orderBy('created_at', 'desc')->get();
 
-        if (empty($newly_added_products)) {
+        if ($newly_added_products->isEmpty()) {
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
@@ -145,7 +145,6 @@ class ProductsController extends Controller
                 'message' => 'Result',
                 'data' => $newly_added_products,
             ]);
-
         }
     }
 
@@ -178,18 +177,17 @@ class ProductsController extends Controller
         $latest_review = DB::table('product_reviews')->where('product_id', $id)->orderBy('user_id', 'desc')->first();
         $user_images = DB::table('users')
             ->select('user_image')
-            ->join('product_reviews','product_reviews.user_id','=','users.id')
+            ->join('product_reviews', 'product_reviews.user_id', '=', 'users.id')
             ->where('product_reviews.product_id', $id)
             ->orderBy('user_id', 'desc')
             ->get();
 
         $images = array();
-        foreach($user_images as $key=>$img)
-        {
+        foreach ($user_images as $key => $img) {
             $images[] = $img->user_image;
         }
-       
-        if (!empty($product_details)) {
+
+        if (!$product_details->isEmpty()) {
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
@@ -210,14 +208,13 @@ class ProductsController extends Controller
 
     public function view_all_reviews($id)
     {
-        $product_reviews = DB::table('product_reviews')->where('product_id',$id)->get();
+        $product_reviews = DB::table('product_reviews')->where('product_id', $id)->get();
 
-        if (empty($product_reviews)) 
-        {
+        if ($product_reviews->isEmpty()) {
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
-                'message' => 'Product reviews Not Not Found',
+                'message' => 'Product reviews Not Found',
             ]);
         } else {
             return response()->json([
@@ -227,6 +224,5 @@ class ProductsController extends Controller
                 'reviews' => $product_reviews,
             ]);
         }
-        
     }
 }

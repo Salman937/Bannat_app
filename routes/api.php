@@ -43,11 +43,10 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 Route::group(['prefix' => 'product'], function () {
-
 	Route::group(['middleware' => ['auth:api']], function () {
-		Route::resource('home', 'Apis\HomeController');
-		Route::resource('categories', 'Apis\CategoriesController');
-		Route::resource('products', 'Apis\ProductsController');
+		Route::resource('home', 'Apis\HomeController', ['only' => ['index']]);
+		Route::resource('categories', 'Apis\CategoriesController', ['only' => ['index']]);
+		Route::resource('products', 'Apis\ProductsController', ['only' => ['show']]);
 
 		Route::get('low-to-high-products/{id}', 'Apis\ProductsController@low_to_high_products')
 			->name('low-to-high-products');
@@ -70,5 +69,10 @@ Route::group(['prefix' => 'product'], function () {
 		Route::get('view-all-reviews/{id}', 'Apis\ProductsController@view_all_reviews')
 			->name('view-all-reviews');
 	});
+});
 
+Route::group(['prefix' => 'cart'], function () {
+	Route::group(['middleware' => ['auth:api']], function () {
+		Route::resource('coupons', 'Apis\CouponsController', ['only' => ['store']]);
+	});
 });
