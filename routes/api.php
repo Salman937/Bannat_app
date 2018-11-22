@@ -39,15 +39,14 @@ Route::group(['prefix' => 'user'], function () {
 		'uses' => 'Apis\UsersControllers@update_forgot_pass',
 		'as' => 'update-user-password'
 	]);
-
+	Route::resource('settings', 'Apis\SettingsController', ['only' => ['store']]);
 });
 
 Route::group(['prefix' => 'product'], function () {
-
 	Route::group(['middleware' => ['auth:api']], function () {
-		Route::resource('home', 'Apis\HomeController');
-		Route::resource('categories', 'Apis\CategoriesController');
-		Route::resource('products', 'Apis\ProductsController');
+		Route::resource('home', 'Apis\HomeController', ['only' => ['index']]);
+		Route::resource('categories', 'Apis\CategoriesController', ['only' => ['index']]);
+		Route::resource('products', 'Apis\ProductsController', ['only' => ['show']]);
 
 		Route::get('low-to-high-products/{id}', 'Apis\ProductsController@low_to_high_products')
 			->name('low-to-high-products');
@@ -69,6 +68,23 @@ Route::group(['prefix' => 'product'], function () {
 
 		Route::get('view-all-reviews/{id}', 'Apis\ProductsController@view_all_reviews')
 			->name('view-all-reviews');
-	});
 
+		Route::get('user-wish-list-products/{id}', 'Apis\ProductsController@user_wish_list_products')
+			->name('user-wish-list-products');
+	});
+});
+
+Route::group(['prefix' => 'cart'], function () {
+	Route::group(['middleware' => ['auth:api']], function () {
+		Route::resource('coupons', 'Apis\CouponsController', ['only' => ['store']]);
+	});
+});
+
+Route::group(['prefix' => 'settings'], function () {
+	Route::group(['middleware' => ['auth:api']], function () {
+		Route::get('privacy-policy', 'Apis\SettingsController@privacy_policy')
+		->name('privacy-policy');
+		Route::get('terms-conditions', 'Apis\SettingsController@terms_conditions')
+		->name('terms-conditions');
+	});
 });
