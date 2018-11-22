@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Category;
 use Session;
+use DB;
 
 class CategoriesController extends Controller
 {
@@ -128,9 +129,12 @@ class CategoriesController extends Controller
     public function third_category_list()
     {
         $data['heading']    = 'Third Category List';
-        $data['third_category'] = Category::where('level',2)->get();
         $data['categories'] = Category::where('level',0)->get();
-
+        $data['third_category'] =  DB::table('categories AS a')
+                                    ->join('categories AS b', 'b.id', '=', 'a.parent_id')
+                                    ->join('categories AS c', 'c.id', '=', 'b.parent_id')
+                                    ->select('a.*', 'b.category AS sec_cat', 'c.category AS first_cat')
+                                    ->get();
         return view('admin.thirdcategory.list')->with($data);
     }
     public function get_cat(Request $request)
@@ -143,13 +147,20 @@ class CategoriesController extends Controller
         $this->validate($request,[
             'head_category' => 'required',
             'secound_cat' => 'required',
-            'category' => 'required'
+            'category' => 'required',
+            'image'    =>  'required|image'
         ]);
 
         $category = new Category;
 
+        $featured = $request->image;
+        $featured_image_name = time().$featured->getClientOriginalName();
+        $featured->move('uploads/category/',$featured_image_name);
+
+
         $category->category = $request->category;
         $category->category_slug = str_slug($request->category, '-');
+        $category->image = asset('uploads/category/'.$featured_image_name);
         $category->level = 2;
         $category->parent_id = $request->secound_cat;
         

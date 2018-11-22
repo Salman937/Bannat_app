@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\Product;
 use Session;
 use Auth;
 
@@ -22,7 +23,7 @@ class OrdersController extends Controller
     public function index()
     {
         $data['heading']    = 'Orders List';
-        $data['order'] = Order::where('user_id',Auth::user()->id)->get();
+        $data['order'] = Order::where('user_id',Auth::user()->id)->where('order_status', '!=' ,'completed')->get();
 
         return view('admin.order.list')->with($data);
     }
@@ -128,4 +129,19 @@ class OrdersController extends Controller
             print json_encode(0);
         }
     }
+    public function completed_orders_list()
+    {
+        $data['heading']    = 'Completed Orders List';
+        $data['order'] = Order::where('user_id',Auth::user()->id)->where('order_status','completed')->get();
+
+        return view('admin.order.completed')->with($data);
+    }
+    public function lowstock_product()
+    {
+        $data['heading']    = 'Low Stock Product List';
+        $data['product'] = Product::where('user_id',Auth::user()->id)->where('qty','<',5)->get();
+
+        return view('admin.product.low_stock')->with($data);
+    }
+
 }

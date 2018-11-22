@@ -8,7 +8,6 @@
                 <div class="ibox-title">
                     <h5>{{ $heading }}</h5>
                     <div class="ibox-tools">
-                        {{-- <a class="btn btn-xs btn-primary" href="{{ route('subcategory.create') }}"><i class="fa fa-plus-circle"></i> Add SubCategory</a> --}}
                         <a data-toggle="modal" class="btn btn-primary btn-xs" href="#modal-form"> Add Secound Category</a>
                     </div>
                 </div>
@@ -17,6 +16,7 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                           <tr>
+                            <th>Head Category</th>
                             <th>Category</th>
                             <th>Category Slug</th>
                             <th>Action</th>
@@ -25,6 +25,7 @@
                         <tbody>
                             @foreach($subcategories as $cat)
                               <tr class="gradeX">
+                                <td>{{$cat->parent_cat}}</td>
                                 <td>{{$cat->category}}</td>
                                 <td>{{$cat->category_slug}}</td>
                                 <td>

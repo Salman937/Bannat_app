@@ -34,7 +34,6 @@ class CouponsController extends Controller
      */
     public function create()
     {
-        // dd(Product::all());
         $data['heading'] = 'Add Coupons';
         $data['product'] = Product::all();
 
@@ -50,8 +49,7 @@ class CouponsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            // 'product_id' => 'required',
-            'product_check_box' => 'required',
+            'product_check' => 'required',
             'coupon_code' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
@@ -62,7 +60,7 @@ class CouponsController extends Controller
         $coupons = new Coupons;
 
         $product_id=array();
-        foreach ($request->product_check_box as $key => $value) {
+        foreach ($request->product_check as $key => $value) {
             $product_id[] = $value;
         }
 

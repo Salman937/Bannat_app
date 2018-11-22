@@ -49,9 +49,13 @@
                                 </td>
                                 <td>{{$pro->description}}</td>
                                 <td>
-                                    <a href="{{ route('product.seller.edit', ['id' => $pro->id]) }}" class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i> </a>
-                                    
-                                    <a href="{{ route('product.seller.destroy', ['id' => $pro->id]) }}" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i> </a>
+                                    <a href="{{ route('product.edit', [$pro->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+
+                                    <form action="{{ URL::route('product.destroy', [$pro->id]) }}" method="POST">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i></button>
+                                    </form>
                                 </td>
                               </tr>
                             @endforeach

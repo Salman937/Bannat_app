@@ -49,16 +49,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->color);
         $this->validate($request,[
             'third_cat' => 'required',
             'price' => 'required',
             'title' => 'required',
             'images' => 'required',
-            'size' => 'required',
-            'color' => 'required',
             'description' => 'required',
-            // 'sale' => 'required',
             'qty' => 'required'
         ]);
 
@@ -80,11 +76,17 @@ class ProductController extends Controller
                 $featured_images[]=asset('uploads/product/'.$name);
             }
         }
+        $product->first_cat = $request->head_category;
+        $product->sec_cat = $request->secound_cat;
         $product->products_categories_id = $request->third_cat;
         $product->price = $request->price;
         $product->title = $request->title;
-        $product->size = implode("|",$request->size);
-        $product->color = implode("|",$request->color);
+        if (!empty($request->color)) {
+            $product->color = implode("|",$request->color);
+        }
+        if (!empty($request->size)) {
+            $product->size = implode("|",$request->size);
+        }
         $product->image = implode("|",$images);
         $product->description = $request->description;
         $product->user_id = Auth::user()->id;
@@ -95,7 +97,7 @@ class ProductController extends Controller
 
         Session::flash('success','Your data is save.');
         
-        return redirect()->route('product.index');
+        return redirect()->route('product.seller.index');
     }
 
     /**
@@ -117,7 +119,13 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['heading'] = 'Product Edit';
+        $data['product'] = Product::find($id);
+        $data['categories'] = Category::where('level',0)->get();
+        $data['sec_categories'] = Category::where('level',1)->get();
+        $data['third_categories'] = Category::where('level',2)->get();
+
+        return view('admin.product.edit')->with($data);
     }
 
     /**
@@ -129,7 +137,62 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'third_cat' => 'required',
+            'price' => 'required',
+            'title' => 'required',
+            // 'new_feature_image' => 'required',
+            'description' => 'required',
+            'qty' => 'required'
+        ]);
+
+        $product = Product::find($id);
+
+         $images=array();
+        if($image_files=$request->file('new_feature_image')){
+            foreach($image_files as $file){
+                $name= time().$file->getClientOriginalName();
+                $file->move('uploads/product',$name);
+                $images[]=asset('uploads/product/'.$name);
+            }
+            $product->image = implode("|",$images);
+        }
+        else{
+            $product->image = $request->feature_image;
+        }
+
+         $option_images=array();
+        if($files=$request->file('new_option_images')){
+            foreach($files as $file){
+                $name= time().$file->getClientOriginalName();
+                $file->move('uploads/product',$name);
+                $option_images[]=asset('uploads/product/'.$name);
+            }
+            $product->options = implode("|",$option_images);
+        }
+        else{
+            $product->options = $request->option_images;
+        }
+        $product->first_cat = $request->head_category;
+        $product->sec_cat = $request->secound_cat;
+        $product->products_categories_id = $request->third_cat;
+        $product->price = $request->price;
+        $product->title = $request->title;
+        if (!empty($request->color)) {
+            $product->color = implode("|",$request->color);
+        }
+        if (!empty($request->size)) {
+            $product->size = implode("|",$request->size);
+        }
+        $product->description = $request->description;
+        $product->user_id = Auth::user()->id;
+        $product->qty = $request->qty;
+
+        $product->save();
+
+        Session::flash('success','Your Data Updated Seccussfully');
+        
+        return redirect()->route('product.seller.index');
     }
 
     /**
@@ -146,6 +209,7 @@ class ProductController extends Controller
         Session::flash('success','Record is deleted seccussfully');
         return redirect()->back();
     }
+    
     public function seller_404_error()
     {
         return view('404_error');

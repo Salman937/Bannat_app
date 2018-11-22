@@ -37,7 +37,7 @@
                                         <input type="text" class="form-control" readonly name="product_id[]" style="width: 100%;" value="{{ $prod->title }}"></td>
                                     <td>
                                         <div class="checkbox checkbox-success">
-                                            <input id="checkbox3" type="checkbox" name="product_check_box[]" value="{{ $prod->id }}" class="product_check_box">
+                                            <input id="checkbox3" type="checkbox" name="product_check[]" value="{{ $prod->id }}" class="product_check_box">
                                             <label for="checkbox3">
                                             </label>
                                         </div>
@@ -65,21 +65,14 @@
                                 <label>Coupon Code</label> 
                                 <input type="text" class="form-control" name="coupon_code">
                             </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group" id="data_1">
-                                <label class="font-normal">Start Date</label>
-                                <div class="input-group date">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="start_date">
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label>Discount Type</label> 
                                 <input type="text" class="form-control" name="discount_type">
                             </div>
-                        </div>
-                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Discount Value</label> 
+                                <input type="number" class="form-control" name="discount_value">
+                            </div>
                             <div class="form-group" id="data_1">
                                 <label class="font-normal">End Date</label>
                                 <div class="input-group date">
@@ -87,12 +80,14 @@
                                     <input type="text" class="form-control" name="end_date">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Discount Value</label> 
-                                <input type="number" class="form-control" name="discount_value">
+                            <div class="form-group" id="data_1">
+                                <label class="font-normal">Start Date</label>
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="start_date">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12">
+                            <hr>
                             <div class="form-group">
                                 <button class="btn btn-sm btn-primary m-t-n-xs" type="submit"><strong>Save</strong></button>
                             </div>
@@ -113,12 +108,14 @@
 
     <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet"> --}}
 
 @endsection
 
 @section('scrpits')
     <!-- data table -->
+    {{-- <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script> --}}
+
     <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script>
@@ -166,4 +163,9 @@
     <!-- iCheck -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
+@endsection
+
+
+@section('styles')
+<link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
 @endsection

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use App\Category;
+use DB;
 
 class SubcategoryController extends Controller
 {
@@ -22,8 +23,10 @@ class SubcategoryController extends Controller
     {
         $data['heading'] = 'Secound Category list';
         $data['categories'] = Category::where('level',0)->get();
-        $data['subcategories'] = Category::where('level',1)->get();
-
+        $data['subcategories'] =  DB::table('categories AS a')
+                                    ->join('categories AS b', 'b.parent_id', '=', 'a.id')
+                                    ->select('a.*', 'b.category AS parent_cat')
+                                    ->get();
         return view('admin.subcategory.list')->with($data);
     }
 

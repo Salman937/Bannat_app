@@ -23,7 +23,7 @@
                         <tbody>
                             @foreach($gallery as $img)
                               <tr>
-                                <td><img src="{{asset('uploads/gallery/'.$img->images)}}" alt="{{ $img->images }}"  width="70px" height="50px" style="border-radius:15px;"></td>
+                                <td><img src="{{asset('uploads/gallery/'.$img->images)}}" alt="{{ $img->images }}" width="70px" height="50px" style="border-radius:15px;"></td>
                                 <td>
                                     <a href="{{ route('gallery.edit', [$img->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 

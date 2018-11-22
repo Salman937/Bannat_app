@@ -16,16 +16,22 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                           <tr>
-                            <th>Category</th>
+                            <th>First Category</th>
+                            <th>Secound Category</th>
+                            <th>Third Category</th>
                             <th>Category Slug</th>
+                            <th>image</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
                             @foreach($third_category as $cat)
                               <tr class="gradeX">
+                                <td>{{$cat->first_cat}}</td>
+                                <td>{{$cat->sec_cat}}</td>
                                 <td>{{$cat->category}}</td>
                                 <td>{{$cat->category_slug}}</td>
+                                <td><img src="{{ $cat->image }}" alt="{{ $cat->image }}" width="70px" height="50px" style="border-radius:15px;"></td>
                                 <td>
                                     <a href="{{ route('subcategory.edit', [$cat->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 
@@ -49,7 +55,7 @@
                     <div class="col-sm-12">
                         <h3 class="m-t-none m-b">Add Third Category (Sub Category Sub)</h3>
                         <p>&nbsp;</p>
-                        <form action="{{ route('third_category.store') }}" method="post" class="form-horizontal">
+                        <form action="{{ route('third_category.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label>First Category <span class="text-danger">*</span></label>
@@ -69,6 +75,10 @@
                             <div class="form-group">
                                 <label>Category <span class="text-danger">*</span></label> 
                                 <input type="text" placeholder="Enter Category Name" required name="category" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Third Category image <span class="text-danger">*</span></label> 
+                                <input type="file" required name="image" class="form-control">
                             </div>
                             <p>&nbsp;</p>
                             <div>

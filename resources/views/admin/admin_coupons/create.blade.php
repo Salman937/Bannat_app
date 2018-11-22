@@ -61,10 +61,11 @@
 </div> 
 @endsection
 @section('styles')
-    <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
 @endsection
 
 @section('scrpits')
+<script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
     <script>
         $(document).ready(function(){
             $('#data_1 .input-group.date').datepicker({
@@ -76,7 +77,5 @@
             });
         });
     </script>
-   <!-- Data picker -->
-   <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
 
 @endsection

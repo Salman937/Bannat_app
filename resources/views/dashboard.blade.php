@@ -79,13 +79,13 @@
             <div class="col-lg-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-info pull-right">Annual</span>
+                        <span class="label label-info pull-right">From Start</span>
                         <h5>Orders</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">275,800</h1>
-                        <div class="stat-percent font-bold text-info">&nbsp; <i class="fa fa-level-up"></i></div>
-                        <small>New orders</small>
+                        <h1 class="no-margins">{{ $total_orders }}</h1>
+                        {{-- <div class="stat-percent font-bold text-info">&nbsp; <i class="fa fa-level-up"></i></div> --}}
+                        {{-- <small>New orders</small> --}}
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                         <h5>On-Hold Orders</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">2</h1>
+                        <h1 class="no-margins">{{ $pending_orders }}</h1>
                         {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
                         {{-- <small>Total income</small> --}}
                     </div>
@@ -112,7 +112,7 @@
                         <h5>Accpected Orders</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">4</h1>
+                        <h1 class="no-margins">{{ $accpect_orders }}</h1>
                         {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
                         {{-- <small>Total income</small> --}}
                     </div>
@@ -125,7 +125,7 @@
                         <h5>Shipped Orders</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">5</h1>
+                        <h1 class="no-margins">{{ $shipped_orders }}</h1>
                         {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
                         {{-- <small>Total income</small> --}}
                     </div>
@@ -138,7 +138,7 @@
                         <h5>Rejected Orders</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">9</h1>
+                        <h1 class="no-margins">{{ $reject_orders }}</h1>
                         {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
                         {{-- <small>Total income</small> --}}
                     </div>
@@ -153,38 +153,36 @@
                         <h5>Top Product</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">19</h1>
-                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
-                        {{-- <small>Total income</small> --}}
+                        @if(!empty($top_product))
+                            <h1 class="no-margins">{{ $top_product }}</h1>
+                        @else
+                            <h1 class="no-margins">0</h1>
+                        @endif
+
+                            {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
+                            {{-- <small>Total income</small> --}}
                     </div>
                 </div>
             </div>
+            <a href="{{route('lowstock.product')}}">
             <div class="col-lg-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-success pull-right"></span>
-                        <h5>Low Stock Orders</h5>
+                        <h5>Low Stock Product</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">12</h1>
+                        @if(!empty($low_stock_product))
+                            <h1 class="no-margins">{{ $low_stock_product }}</h1>
+                        @else
+                            <h1 class="no-margins">{{ $low_stock_product }}</h1>
+                        @endif
                         {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
                         {{-- <small>Total income</small> --}}
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <span class="label label-success pull-right"></span>
-                        <h5>Out Of Stock Orders</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">21</h1>
-                        {{-- <div class="stat-percent font-bold text-success"> <i class="fa fa-bolt"></i></div> --}}
-                        {{-- <small>Total income</small> --}}
-                    </div>
-                </div>
-            </div>
+            </a>
         </div>
     </div> 
 @endif

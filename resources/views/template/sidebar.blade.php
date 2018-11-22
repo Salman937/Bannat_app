@@ -61,8 +61,8 @@
                 <li>
                     <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Product</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('product.create')}}">Add Product</a></li>
-                        <li><a href="{{route('product.index')}}">Product List</a></li>
+                        <li><a href="{{route('product.seller.create')}}">Add Product</a></li>
+                        <li><a href="{{route('product.seller.index')}}">Product List</a></li>
                     </ul>
                 </li>
                 <li>
@@ -74,7 +74,7 @@
                 <li>
                     <a href="#"><i class="fa fa-table"></i> <span class="nav-label">Reports</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="#">Sales Report</a></li>
+                        <li><a href="{{route('completed.orders')}}">Sales Report</a></li>
                     </ul>
                 </li>
             @endif

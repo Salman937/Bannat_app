@@ -95,6 +95,7 @@
                     {
                         if (return_data == '1') {
                             message('success','Order Status Updated SuccessFully');
+                            location.reload();
                         }
                         else{
                             message('error','There Are Some Error! Please Contact System Developer');

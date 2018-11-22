@@ -104,9 +104,38 @@ Route::group(['middleware' => 'auth'],function(){
 		'uses' 	=> 'admin\OrdersController@order_status_accpect',
 		'as'	=> 'order.status.accpect'
 	]);
+	Route::get('/completed_orders',[
+		'uses' 	=> 'admin\OrdersController@completed_orders_list',
+		'as'	=> 'completed.orders'
+	]);
+	Route::get('/lowstock_product',[
+		'uses' 	=> 'admin\OrdersController@lowstock_product',
+		'as'	=> 'lowstock.product'
+	]);
 
-});
 
-Route::group(['middleware' => 'auth'], function(){
-	Route::resource('product','admin\ProductController');
+	Route::get('/product_seller_index',[
+		'uses' 	=> 'admin\ProductController@index',
+		'as'	=> 'product.seller.index'
+	]);
+	Route::get('/product_seller_create',[
+		'uses' 	=> 'admin\ProductController@create',
+		'as'	=> 'product.seller.create'
+	]);
+	Route::post('/product_seller_store',[
+		'uses' 	=> 'admin\ProductController@store',
+		'as'	=> 'product.seller.store'
+	]);
+	Route::get('/product_seller_edit/{id}',[
+		'uses' 	=> 'admin\ProductController@edit',
+		'as'	=> 'product.seller.edit'
+	]);
+	Route::post('/product_seller_update/{id}',[
+		'uses' 	=> 'admin\ProductController@update',
+		'as'	=> 'product.seller.update'
+	]);
+	Route::get('/product_seller_destroy/{id}',[
+		'uses' 	=> 'admin\ProductController@destroy',
+		'as'	=> 'product.seller.destroy'
+	]);
 });

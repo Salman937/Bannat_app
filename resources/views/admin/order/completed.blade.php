@@ -8,7 +8,6 @@
                 <div class="ibox-title">
                     <h5>{{ $heading }}</h5>
                     <div class="ibox-tools">
-                        {{-- <a class="btn btn-xs btn-primary" href="{{ route('user.create') }}"><i class="fa fa-plus-circle"></i> Add Gallery Image</a> --}}
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -16,26 +15,19 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                           <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Type</th>
-                            <th>Phone No</th>
-                            <th>Action</th>
+                            <th>Order</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach($users as $user)
+                            @foreach($order as $ord)
                               <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->type }}</td>
-                                <td>{{ $user->phone_no }}</td>
-                                <td>
-                                    <a href="{{ route('user.edit', [$user->id]) }}" class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i> </a>
-
-                                    <a href="{{ route('user.destroy', [$user->id]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i> </a>
-                                    
-                                </td>
+                                <td>#{{ $ord->id }} &nbsp; {{ $ord->name }}</td>
+                                <td>{{ $ord->order_date->diffForHumans() }}</td>
+                                <td>{{ $ord->order_status }}</td>
+                                <td>{{ $ord->total_price }}</td>
                               </tr>
                             @endforeach
                         </tbody>
@@ -55,6 +47,7 @@
 
 @section('scrpits')
     <!-- data table -->
+    <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function(){
