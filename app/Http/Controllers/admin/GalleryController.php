@@ -55,9 +55,9 @@ class GalleryController extends Controller
         
         $featured = $request->image;
         $featured_image_name = time().$featured->getClientOriginalName();
-        $featured->move('uploads/gallery',$featured_image_name);
+        $featured->move('uploads/gallery/',$featured_image_name);
 
-        $gallery->images = $featured_image_name;
+        $gallery->images = asset('uploads/gallery/'.$featured_image_name);
 
         $gallery->save();
 
@@ -85,7 +85,10 @@ class GalleryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['heading'] = 'Edit Gallery';
+        $data['gallery'] = Gallery::find($id);
+
+        return view('admin.gallery.edit')->with($data);
     }
 
     /**
@@ -97,7 +100,24 @@ class GalleryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $gallery = Gallery::find($id);
+
+        if($request->file('new_image')){
+            $featured = $request->new_image;
+            $featured_image_name = time().$featured->getClientOriginalName();
+            $featured->move('uploads/gallery/',$featured_image_name);
+
+            $gallery->images = asset('uploads/gallery/'.$featured_image_name);
+        }
+        else{
+            $gallery->images = $request->pre_image;
+        }
+        
+        $gallery->save();
+
+        Session::flash('success','Your Data Is Updated Seccussfully');
+        
+        return redirect()->route('gallery.index');
     }
 
     /**
@@ -114,10 +134,14 @@ class GalleryController extends Controller
         Session::flash('success','Record is deleted seccussfully');
         return redirect()->back();
     }
+
+
     public function admin_404_error()
     {
         return view('admin.404_error_blade');
     }
+
+
     public function coupons_list()
     {
         $data['heading'] = 'Coupons List';
@@ -151,6 +175,39 @@ class GalleryController extends Controller
         $coupons->save();
 
         Session::flash('success','Your data is save.');
+        
+        return redirect()->route('admin.coupons.list');
+    }
+    public function coupons_edit($id)
+    {
+        $data['heading'] = 'Edit Coupons';
+        $data['coupons'] = Coupons::find($id);
+
+        return view('admin.admin_coupons.edit')->with($data);
+    }
+
+    public function coupons_update(Request $request, $id)
+    {
+        $this->validate($request,[
+            'coupon_code' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'discount_type' => 'required',
+            'discount_value' => 'required'
+        ]);
+
+        $coupons = Coupons::find($id);
+
+        $coupons->product_id = 'admin_id';
+        $coupons->coupon_code = $request->coupon_code;
+        $coupons->start_date = date('Y-m-d', strtotime($request->start_date));
+        $coupons->end_date = date('Y-m-d', strtotime($request->start_date));
+        $coupons->discount_value = $request->discount_value;
+        $coupons->discount_type = $request->discount_type;
+        
+        $coupons->save();
+
+        Session::flash('success','Your Data Is Updated Seccussfully');
         
         return redirect()->route('admin.coupons.list');
     }

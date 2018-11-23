@@ -177,7 +177,7 @@ $(document).ready(function(){
         $.ajax({
             data:{id:first_cat},
             type:'POST',
-            url:"/get_cat_seller",
+            url:"{{ route('get.cat.seller')}}",
             success: function(return_data)
             {
                 var data= jQuery.parseJSON(return_data);
@@ -205,7 +205,7 @@ $(document).ready(function(){
         $.ajax({
             data:{id:sec_cat},
             type:'POST',
-            url:"/get_cat_seller",
+            url:"{{ route('get.cat.seller')}}",
             success: function(return_data)
             {
                 var data= jQuery.parseJSON(return_data);

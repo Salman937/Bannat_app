@@ -35,7 +35,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $data['heading'] = 'Add Product';
+        $data['heading'] = 'Edit Product';
         $data['categories'] = Category::where('level',0)->get();
 
         return view('admin.product.create')->with($data);

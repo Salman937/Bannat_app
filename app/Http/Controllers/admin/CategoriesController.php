@@ -84,7 +84,10 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['heading'] = 'Edit Category';
+        $data['category'] = Category::find($id);
+
+        return view('admin.headcategory.edit')->with($data);
     }
 
     /**
@@ -96,7 +99,22 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'category' => 'required'
+        ]);
+
+        $category = Category::find($id);
+
+        $category->category = $request->category;
+        $category->category_slug = str_slug($request->category, '-');
+        $category->level = 0;
+        $category->parent_id = 0;
+        
+        $category->save();
+
+        Session::flash('success','Your Data Is Updated.');
+        
+        return redirect()->route('category.index');
     }
 
     /**
@@ -107,21 +125,18 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $cat = Category::find($id);
-        $sub_category = Category::where('parent_id',$id)->get();
+        $cat = DB::table('categories')->where('id', $id)->first();
 
-        if (!empty($sub_category)) {
-            foreach ($sub_category as $sub_key => $sub_value) {
-                $sub_category_sub = Category::where('parent_id',$sub_value->id)->first();
-                if (!empty($sub_category_sub)) {
-                    foreach ($sub_category_sub as $sub_key_sub => $sub_value_sub) {
-                        $sub_category_sub->forceDelete();
-                    }
-                    $sub_category->forceDelete();
-                }
+        $secound_cat = DB::table('categories')->where('parent_id', $id)->get();
+        foreach ($secound_cat as $sec_key => $sec_value) {
+            $third_cat = DB::table('categories')->where('parent_id', $sec_value->id)->get();
+            foreach ($third_cat as $third_key => $third_value) {
+                DB::table('categories')->where('id', $third_value->id)->delete();
             }
+            DB::table('categories')->where('id', $sec_value->id)->delete();
         }
-        $cat->forceDelete();
+        DB::table('categories')->where('id', $id)->delete();
+
         Session::flash('success','Record is deleted seccussfully');
         return redirect()->back();
     }
@@ -131,9 +146,14 @@ class CategoriesController extends Controller
         $data['heading']    = 'Third Category List';
         $data['categories'] = Category::where('level',0)->get();
         $data['third_category'] =  DB::table('categories AS a')
-                                    ->join('categories AS b', 'b.id', '=', 'a.parent_id')
-                                    ->join('categories AS c', 'c.id', '=', 'b.parent_id')
-                                    ->select('a.*', 'b.category AS sec_cat', 'c.category AS first_cat')
+                                    ->select('a.category AS parent_cat', 'b.category AS sec_cat', 'c.*')
+                                    ->where('b.level', '=', 1)
+                                    ->join('categories AS b',function ($join) {
+                                        $join->on('b.parent_id', '=', 'a.id');
+                                    })
+                                    ->join('categories AS c',function ($join) {
+                                        $join->on('c.parent_id', '=', 'b.id');
+                                    })
                                     ->get();
         return view('admin.thirdcategory.list')->with($data);
     }
@@ -170,12 +190,59 @@ class CategoriesController extends Controller
         
         return redirect()->route('third.category');
     }
+    public function thirdcategory_edit($id)
+    {
+        $data['heading'] = 'Edit Category';
+        $data['third_category'] = Category::find($id);
+
+        $data['fi_category']=Category::where('level',0)->get();
+        $data['sc_category']=Category::where('level',1)->get();
+        $data['secound_category']=Category::where('id',$data['third_category']->parent_id)->first();
+        $data['first_category']=Category::where('id',$data['secound_category']->parent_id)->first();
+
+        return view('admin.thirdcategory.edit')->with($data);
+    }
+
+    public function thirdcategory_update(Request $request, $id)
+    {
+        $this->validate($request,[
+            'head_category' => 'required',
+            'secound_cat' => 'required',
+            'category' => 'required'
+            // 'image'    =>  'required|image'
+        ]);
+
+        $category = Category::find($id);
+
+        if ($request->file('new_image')) {
+            $featured = $request->new_image;
+            $featured_image_name = time().$featured->getClientOriginalName();
+            $featured->move('uploads/category/',$featured_image_name);   
+            
+            $category->image = asset('uploads/category/'.$featured_image_name);
+        }
+        else{
+            $category->image = $request->pre_image;
+        }
+
+
+        $category->category = $request->category;
+        $category->category_slug = str_slug($request->category, '-');
+        $category->level = 2;
+        $category->parent_id = $request->sec_category;
+        
+        $category->save();
+
+        Session::flash('success','Record Is Updated Seccussfully');
+        
+        return redirect()->route('third.category');
+    }
     public function thirdcategory_destory($id)
     {
         $cat = Category::find($id);
 
         $cat->delete();
-        Session::flash('success','Record is deleted seccussfully');
+        Session::flash('success','Record Is Deleted Seccussfully');
         return redirect()->back();
     }
 }

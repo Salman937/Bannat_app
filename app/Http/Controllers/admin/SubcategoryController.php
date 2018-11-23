@@ -24,8 +24,11 @@ class SubcategoryController extends Controller
         $data['heading'] = 'Secound Category list';
         $data['categories'] = Category::where('level',0)->get();
         $data['subcategories'] =  DB::table('categories AS a')
-                                    ->join('categories AS b', 'b.parent_id', '=', 'a.id')
-                                    ->select('a.*', 'b.category AS parent_cat')
+                                    ->select('a.category AS parent_cat', 'b.*')
+                                    ->join('categories AS b',function ($join) {
+                                        $join->on('b.parent_id', '=', 'a.id')
+                                        ->where('b.level', '=', 1);
+                                    })
                                     ->get();
         return view('admin.subcategory.list')->with($data);
     }
@@ -89,7 +92,10 @@ class SubcategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['heading'] = 'Edit Sub Category';
+        $data['category'] = Category::find($id);
+        $data['head_category'] = Category::where('level',0)->get();
+        return view('admin.subcategory.edit')->with($data);
     }
 
     /**
@@ -101,7 +107,22 @@ class SubcategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'head_category' => 'required',
+            'category' => 'required'
+        ]);
+
+        $category = Category::find($id);
+        $category->category = $request->category;
+        $category->category_slug = str_slug($request->category, '-');
+        $category->level = 1;
+        $category->parent_id = $request->head_category;
+        
+        $category->save();
+
+        Session::flash('success','Your Data Is Updated.');
+        
+        return redirect()->route('subcategory.index');
     }
 
     /**
@@ -112,9 +133,13 @@ class SubcategoryController extends Controller
      */
     public function destroy($id)
     {
-        $cat = Category::find($id);
+        $secound_cat = DB::table('categories')->where('id', $id)->first();
+        $third_cat = DB::table('categories')->where('parent_id', $id)->get();
+        foreach ($third_cat as $thir_key => $thir_value) {
+            DB::table('categories')->where('id', $thir_value->id)->delete();
+        }
+        DB::table('categories')->where('id', $id)->delete();
 
-        $cat->delete();
         Session::flash('success','Record is deleted seccussfully');
         return redirect()->back();
     }

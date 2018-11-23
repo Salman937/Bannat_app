@@ -24,12 +24,6 @@ class UsersController extends Controller
         return view('admin.user.list')->with($data);
     }
 
-    // public function user_register()
-    // {
-    //     $data['heading'] = 'Add User';
-    //     return view('admin.user.create')->with($data);
-    // }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -70,7 +64,10 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['heading'] = 'Edit User';
+        $data['user'] = User::find($id);
+
+        return view('admin.user.edit')->with($data);
     }
 
     /**
@@ -82,7 +79,40 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+            // 'name' => 'required|string|max:255',
+            // 'email' => 'required|string|email|max:255|unique:users',
+            // 'password' => 'required|string|min:6|confirmed',
+            // 'phone_no' => 'required|integer|min:6',
+            // 'type' => 'required',
+        
+        $this->validate($request,[
+            'name' => 'required|string||max:255',
+            'email' => 'required|email|string|max:255|unique:users',
+            'password' => 'nullable|string|min:6|confirmed',
+            'phone_no' => 'required|integer|min:6',
+            'type' => 'required',
+            'active' => 'required'
+        ]);
+
+        $user = User::find($id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if($request->post('password')){
+            $user->password = bcrypt($request->password);
+        }
+        else{
+            $user->password = $request->old_password;
+        }
+        $user->phone_no = $request->phone_no;
+        $user->type = $request->type;
+        $user->deactive_users = $request->active;
+        // dd($user);
+        $user->save();
+
+        Session::flash('success','User Record Is Updated Seccussfully');
+        
+        return redirect()->route('user.index');
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Session;
 use App\Coupons;
 use App\Product;
+use Auth;
 
 class CouponsController extends Controller
 {
@@ -22,7 +23,7 @@ class CouponsController extends Controller
     public function index()
     {
         $data['heading'] = 'Coupons list';
-        $data['coupons'] = Coupons::all();
+        $data['coupons'] = Coupons::where('user_id',Auth::user()->id)->get();
 
         return view('admin.coupons.list')->with($data);
     }

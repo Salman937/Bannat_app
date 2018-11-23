@@ -84,11 +84,27 @@ Route::group(['middleware' => 'auth'],function(){
 		'uses'	=> 'admin\GalleryController@coupons_destory',
 		'as'	=> 'admin.coupons.destroy'
 	]);
+	Route::get('/admin_coupons_edit/{id}',[
+		'uses'	=> 'admin\GalleryController@coupons_edit',
+		'as'	=> 'admin.coupons.edit'
+	]);
+	Route::post('/admin_coupons_update/{id}',[
+		'uses'	=> 'admin\GalleryController@coupons_update',
+		'as'	=> 'admin.coupons.update'
+	]);
 	Route::post('/get_cat_seller',[
 		'uses' 	=> 'admin\ProductController@get_cat',
 		'as'	=> 'get.cat.seller'
 	]);
-	Route::get('/admin/coupons/destroy/{id}',[
+	Route::get('/thirdcategory_edit/{id}',[
+		'uses' 	=> 'admin\CategoriesController@thirdcategory_edit',
+		'as'	=> 'thirdcat.edit'
+	]);
+	Route::get('/thirdcategory_update/{id}',[
+		'uses' 	=> 'admin\CategoriesController@thirdcategory_update',
+		'as'	=> 'thirdcat.update'
+	]);
+	Route::get('/third_category_destroy/{id}',[
 		'uses'	=> 'admin\CategoriesController@thirdcategory_destory',
 		'as'	=> 'thirdcat.destroy'
 	]);
@@ -112,7 +128,6 @@ Route::group(['middleware' => 'auth'],function(){
 		'uses' 	=> 'admin\OrdersController@lowstock_product',
 		'as'	=> 'lowstock.product'
 	]);
-
 
 	Route::get('/product_seller_index',[
 		'uses' 	=> 'admin\ProductController@index',
@@ -138,4 +153,5 @@ Route::group(['middleware' => 'auth'],function(){
 		'uses' 	=> 'admin\ProductController@destroy',
 		'as'	=> 'product.seller.destroy'
 	]);
+
 });

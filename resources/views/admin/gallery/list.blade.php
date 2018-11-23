@@ -23,9 +23,13 @@
                         <tbody>
                             @foreach($gallery as $img)
                               <tr>
-                                <td><img src="{{asset('uploads/gallery/'.$img->images)}}" alt="{{ $img->images }}" width="70px" height="50px" style="border-radius:15px;"></td>
+                                <td><img src="{{ $img->images }}" alt="{{ $img->images }}" width="70px" height="50px" style="border-radius:15px;"></td>
                                 <td>
-                                    <a href="{{ route('gallery.edit', [$img->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+                                    <form action="{{ URL::route('gallery.edit', [$img->id]) }}" method="POST">
+                                        <input type="hidden" name="_method" value="get">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i></button>
+                                    </form>
 
                                     <form action="{{ URL::route('gallery.destroy', [$img->id]) }}" method="POST">
                                         <input type="hidden" name="_method" value="DELETE">

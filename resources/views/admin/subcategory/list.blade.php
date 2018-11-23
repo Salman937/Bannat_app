@@ -29,7 +29,11 @@
                                 <td>{{$cat->category}}</td>
                                 <td>{{$cat->category_slug}}</td>
                                 <td>
-                                    <a href="{{ route('subcategory.edit', [$cat->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+                                    <form action="{{ URL::route('subcategory.edit', [$cat->id]) }}" method="POST">
+                                        <input type="hidden" name="_method" value="get">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i></button>
+                                    </form>
 
                                     <form action="{{ URL::route('subcategory.destroy', [$cat->id]) }}" method="POST">
                                         <input type="hidden" name="_method" value="DELETE">

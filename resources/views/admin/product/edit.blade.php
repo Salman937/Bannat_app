@@ -139,7 +139,9 @@
                                               <td width="30px;"> <button style="margin-right: 2px;margin-top: 4px;" type="button" class="btn btn-xs btn-default add_colour"><i class="fa fa-plus-circle"></i></button></td>
                                               <?php $color = explode('|',$product->color)?>
                                               @foreach($color as $col)
-                                                <td><input style="width:30px !important;" type="color" name="color[]" value="{{ $col }}"></td>
+                                                @if(!empty($col))
+                                                    <td><input style="width:30px !important;" type="color" name="color[]" value="{{ $col }}"></td>
+                                                @endif
                                               @endforeach
                                               <td class="first_color"></td>
                                             </tr>

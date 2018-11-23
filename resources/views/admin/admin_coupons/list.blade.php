@@ -34,7 +34,7 @@
                                 <td>{{ $coup->discount_value }}</td>
                                 <td>{{ $coup->discount_type }}</td>
                                 <td>
-                                    <a href="{{ route('coupons.edit', [$coup->id]) }}" class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i> </a>
+                                    <a href="{{ route('admin.coupons.edit', ['id' => $coup->id]) }}" class="btn btn-primary btn-xs" title="Edit"><i class="fa fa-pencil"> </i> </a>
 
                                     <a href="{{ route('admin.coupons.destroy',['id' => $coup->id ]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"> </i> </a>
                                 </td>

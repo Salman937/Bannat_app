@@ -27,13 +27,13 @@
                         <tbody>
                             @foreach($third_category as $cat)
                               <tr class="gradeX">
-                                <td>{{$cat->first_cat}}</td>
+                                <td>{{$cat->parent_cat}}</td>
                                 <td>{{$cat->sec_cat}}</td>
                                 <td>{{$cat->category}}</td>
                                 <td>{{$cat->category_slug}}</td>
                                 <td><img src="{{ $cat->image }}" alt="{{ $cat->image }}" width="70px" height="50px" style="border-radius:15px;"></td>
                                 <td>
-                                    <a href="{{ route('subcategory.edit', [$cat->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
+                                    <a href="{{ route('thirdcat.edit', [ 'id' => $cat->id]) }}" class="btn btn-primary btn-xs" title="Edit Colour"><i class="fa fa-pencil"> </i> </a>
 
                                     <a href="{{ route('thirdcat.destroy', ['id' => $cat->id ]) }}" onclick=" return confirm('Are you sure you want to delete this record');" class="btn btn-danger btn-xs" title="Delete Colour"><i class="fa fa-trash"> </i> </a>
                                 </td>
@@ -123,7 +123,7 @@ $(document).ready(function(){
         $.ajax({
         data:{id:first_cat},
         type:'POST',
-        url:"/get_cat",
+        url:"{{ route('get.cat') }}",
         success: function(return_data)
         {
             var data= jQuery.parseJSON(return_data);
