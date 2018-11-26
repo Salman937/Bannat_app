@@ -153,18 +153,34 @@ class ProductsController extends Controller
      */
     public function add_product_to_wishList(Request $request)
     {
-        $product = DB::table('favourite_products')->insert([
-            'user_id' => $request->user_id,
-            'product_id' => $request->product_id,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
+        $check_product = DB::table('favourite_products')
+        ->where('user_id', $request->user_id)
+        ->where('product_id', $request->product_id)
+        ->first();
 
-        return response()->json([
-            'success' => 'true',
-            'status' => '200',
-            'message' => 'Product Added to Wish LIst',
-        ]);
+        if(empty($check_product))
+        {
+            $product = DB::table('favourite_products')->insert([
+                'user_id' => $request->user_id,
+                'product_id' => $request->product_id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+    
+            return response()->json([
+                'success' => 'true',
+                'status' => '200',
+                'message' => 'Product Added to Wish LIst',
+            ]);
+        }
+        else {
+            return response()->json([
+                'success' => 'false',
+                'status' => '402',
+                'message' => 'This product is already added to wish list',
+            ]);
+        }
+        
     }
 
     /**
@@ -195,9 +211,9 @@ class ProductsController extends Controller
                 'message' => 'Result',
                 'product_details' => $product_details,
                 'product_average_review' => round($product_review_avg),
-                'last_review' => $latest_review,
+                'last_review' => empty($latest_review) ? "null" : $latest_review,
                 'review_user_images' => $images,
-                'wishList_product' => $check_produc_wishlist,
+                'wishList_product' => empty($check_produc_wishlist) ? [] : $check_produc_wishlist ,
             ]);
         } else {
             return response()->json([
@@ -237,7 +253,7 @@ class ProductsController extends Controller
     {
         $wishList_products = DB::table('favourite_products')
             ->join('products', 'products.id', '=', 'favourite_products.product_id')
-            ->where('favourite_products.product_id',$id)
+            ->where('favourite_products.user_id',$id)
             ->get();
 
         if ($wishList_products->isEmpty()) {
