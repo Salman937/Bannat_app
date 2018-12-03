@@ -71,6 +71,12 @@ Route::group(['prefix' => 'product'], function () {
 
 		Route::get('user-wish-list-products/{id}', 'Apis\ProductsController@user_wish_list_products')
 			->name('user-wish-list-products');
+		
+		Route::get('head-categories', 'Apis\CategoriesController@head_categories')
+			->name('head-categories');
+		
+		Route::get('sub-categories/{id}', 'Apis\CategoriesController@sub_categories')
+			->name('sub-categories');
 	});
 });
 

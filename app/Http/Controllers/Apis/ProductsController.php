@@ -41,7 +41,7 @@ class ProductsController extends Controller
         $low_to_high = DB::table('products')
             ->where([
                 ['products_categories_id', $id]
-            ])->orderBy('price', 'asc')->get();
+            ])->orderBy('price','ASC')->get();
 
         if ($low_to_high->isEmpty()) {
             return response()->json([
@@ -154,33 +154,31 @@ class ProductsController extends Controller
     public function add_product_to_wishList(Request $request)
     {
         $check_product = DB::table('favourite_products')
-        ->where('user_id', $request->user_id)
-        ->where('product_id', $request->product_id)
-        ->first();
+            ->where('user_id', $request->user_id)
+            ->where('product_id', $request->product_id)
+            ->first();
 
-        if(empty($check_product))
-        {
+        if (empty($check_product)) {
             $product = DB::table('favourite_products')->insert([
                 'user_id' => $request->user_id,
                 'product_id' => $request->product_id,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
-    
+
             return response()->json([
                 'success' => 'true',
                 'status' => '200',
                 'message' => 'Product Added to Wish LIst',
             ]);
-        }
-        else {
+        } else {
             return response()->json([
                 'success' => 'false',
                 'status' => '402',
                 'message' => 'This product is already added to wish list',
             ]);
         }
-        
+
     }
 
     /**
@@ -190,7 +188,25 @@ class ProductsController extends Controller
     {
         $product_details = DB::table('products')->where('id', $id)->first();
         $product_review_avg = DB::table('product_reviews')->where('product_id', $id)->avg('review');
-        $latest_review = DB::table('product_reviews')->where('product_id', $id)->orderBy('user_id', 'desc')->first();
+        $latest_review = DB::table('product_reviews')
+            ->join('users', 'users.id', '=', 'product_reviews.user_id')
+            ->where('product_id', $id)
+            ->orderBy('user_id', 'desc')
+            ->first();
+
+        if (empty($latest_review)) {
+            $new_review = [];
+        } else {
+            $new_review = array(
+                "user_id" => $latest_review->user_id,
+                "product_id" => $latest_review->product_id,
+                "description" => $latest_review->description,
+                "name" => $latest_review->name,
+                "review" => $latest_review->review,
+                "date" => date("d-M-y", strtotime($latest_review->created_at))
+            );
+        }
+
         $check_produc_wishlist = DB::table('favourite_products')->where('product_id', $id)->first();
         $user_images = DB::table('users')
             ->select('user_image')
@@ -211,9 +227,9 @@ class ProductsController extends Controller
                 'message' => 'Result',
                 'product_details' => $product_details,
                 'product_average_review' => round($product_review_avg),
-                'last_review' => empty($latest_review) ? "null" : $latest_review,
+                'last_review' => empty($new_review) ? [] : $new_review,
                 'review_user_images' => $images,
-                'wishList_product' => empty($check_produc_wishlist) ? [] : $check_produc_wishlist ,
+                'wishList_product' => empty($check_produc_wishlist) ? [] : $check_produc_wishlist,
             ]);
         } else {
             return response()->json([
@@ -229,9 +245,29 @@ class ProductsController extends Controller
      */
     public function view_all_reviews($id)
     {
-        $product_reviews = DB::table('product_reviews')->where('product_id', $id)->get();
+        $product_reviews = DB::table('product_reviews')
+            ->join('users', 'users.id', '=', 'product_reviews.user_id')
+            ->where('product_id', $id)
+            ->get();
 
-        if ($product_reviews->isEmpty()) {
+        $pro_reviews = array();
+
+        foreach ($product_reviews as $review) :
+
+            $reviews = array(
+            "user_id" => $review->user_id,
+            "product_id" => $review->product_id,
+            "review" => $review->review,
+            "description" => $review->description,
+            "name" => $review->name,
+            "user_image" => $review->user_image,
+            "date" => date("d-M-y", strtotime($review->created_at)),
+        );
+
+        $pro_reviews[] = $reviews;
+        endforeach;
+
+        if (!$pro_reviews) {
             return response()->json([
                 'success' => 'false',
                 'status' => '401',
@@ -242,7 +278,7 @@ class ProductsController extends Controller
                 'success' => 'true',
                 'status' => '200',
                 'message' => 'Product Reviews',
-                'reviews' => $product_reviews,
+                'reviews' => $pro_reviews,
             ]);
         }
     }
@@ -253,7 +289,7 @@ class ProductsController extends Controller
     {
         $wishList_products = DB::table('favourite_products')
             ->join('products', 'products.id', '=', 'favourite_products.product_id')
-            ->where('favourite_products.user_id',$id)
+            ->where('favourite_products.user_id', $id)
             ->get();
 
         if ($wishList_products->isEmpty()) {
