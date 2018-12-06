@@ -29,27 +29,27 @@ class HomeController extends Controller
 
         $new_added = DB::table('products')->orderBy('id', 'desc')->limit(12)->get();
 
-        $recent_products = array();
+        // $recent_products = array();
 
-        foreach ($new_added as $recently) {
-            if (date("d-m-Y", strtotime($recently->created_at)) == date('d-m-Y')) {
-                $arr = array(
-                    "id" => $recently->id,
-                    "products_categories_id" => $recently->products_categories_id,
-                    "price" => $recently->price,
-                    "title" => $recently->title,
-                    "image" => $recently->image,
-                    "description" => $recently->description,
-                    "sale" => $recently->sale,
-                    "qty" => $recently->qty,
-                    "options" => $recently->options,
-                    "created_at" => $recently->created_at,
-                    "updated_at" => $recently->updated_at
-                );
+        // foreach ($new_added as $recently) {
+        //     if (date("d-m-Y", strtotime($recently->created_at)) == date('d-m-Y')) {
+        //         $arr = array(
+        //             "id" => $recently->id,
+        //             "products_categories_id" => $recently->products_categories_id,
+        //             "price" => $recently->price,
+        //             "title" => $recently->title,
+        //             "image" => $recently->image,
+        //             "description" => $recently->description,
+        //             "sale" => $recently->sale,
+        //             "qty" => $recently->qty,
+        //             "options" => $recently->options,
+        //             "created_at" => $recently->created_at,
+        //             "updated_at" => $recently->updated_at
+        //         );
 
-                array_push($recent_products, $arr);
-            }
-        }
+        //         array_push($recent_products, $arr);
+        //     }
+        // }
 
         return response()->json([
             'success' => 'true',
@@ -58,7 +58,7 @@ class HomeController extends Controller
             'gallery_images' => $gallery_images,
             'flash_deal_images' => $sale_images,
             'trending_deals' => $trending_deals,
-            'newly_products' => $recent_products,
+            'newly_products' => $new_added,
         ]);
     }
 }

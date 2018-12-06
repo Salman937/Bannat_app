@@ -46,7 +46,7 @@ Route::group(['prefix' => 'product'], function () {
 	Route::group(['middleware' => ['auth:api']], function () {
 		Route::resource('home', 'Apis\HomeController', ['only' => ['index']]);
 		Route::resource('categories', 'Apis\CategoriesController', ['only' => ['index']]);
-		Route::resource('products', 'Apis\ProductsController', ['only' => ['show']]);
+		Route::resource('products', 'Apis\ProductsController',['only' => ['show']]);
 
 		Route::get('low-to-high-products/{id}', 'Apis\ProductsController@low_to_high_products')
 			->name('low-to-high-products');
